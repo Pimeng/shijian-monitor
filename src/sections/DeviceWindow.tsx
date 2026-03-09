@@ -183,7 +183,7 @@ const DeviceWindow = memo(function DeviceWindow() {
               {/* 手机端：正常时显示设备名称和窗口标题，息屏时显示大字 */}
               {device.id === 'mobile' && (
                 <>
-                  {!(device.data.window_title.startsWith('Android 系统 - ') || device.data.window_title.startsWith('指纹UI - ')) ? (
+                  {!(device.data.window_title.startsWith('Android 系统 - ') || device.data.window_title.startsWith('指纹UI - ') || device.data.window_title.startsWith('系统界面 - ')) ? (
                     <>
                       <div className="grid grid-cols-1 gap-3">
                         <div>

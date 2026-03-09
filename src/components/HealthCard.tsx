@@ -9,9 +9,11 @@ import {
   Flame, 
   MapPin, 
   Dumbbell,
-  Zap
+  Zap,
+  Clock
 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
+import { formatRelativeTime } from '@/lib/formatters';
 import type { CardConfig, HealthData } from '@/types/health';
 
 interface HealthCardProps {
@@ -36,6 +38,8 @@ const HealthCard = memo(function HealthCard({ config, data, index }: HealthCardP
   const Icon = iconMap[config.icon] || Activity;
   const value = config.getValue(data);
   const subValue = config.getSubValue?.(data);
+  const timestamp = config.getTimestamp?.(data);
+  const updateTime = formatRelativeTime(timestamp);
   
   // 计算进度条值
   const progressValue = typeof value === 'number' && config.showProgress && config.progressMax
@@ -81,6 +85,14 @@ const HealthCard = memo(function HealthCard({ config, data, index }: HealthCardP
               {config.title}
             </span>
           </div>
+          
+          {/* 更新时间戳 */}
+          {timestamp && (
+            <div className="flex items-center gap-1 text-xs text-white/40">
+              <Clock size={10} />
+              <span>{updateTime}</span>
+            </div>
+          )}
         </div>
 
         {/* 数值 */}

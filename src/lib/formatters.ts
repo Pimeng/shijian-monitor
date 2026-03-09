@@ -129,3 +129,48 @@ export function formatSleepTimeRange(sleepData: { t: number; v: number } | undef
   
   return `${formatTime(fallAsleepTime)} - ${formatTime(wakeUpTime)}`;
 }
+
+/**
+ * 格式化时间戳为相对时间（如：2分钟前、1小时前、昨天 14:30）
+ * @param timestamp 毫秒级时间戳
+ * @returns 格式化后的相对时间字符串
+ */
+export function formatRelativeTime(timestamp: number | undefined): string {
+  if (!timestamp) return '暂无数据';
+  
+  const date = new Date(timestamp);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  
+  // 小于1分钟
+  if (diffMinutes < 1) {
+    return '刚刚';
+  }
+  // 小于1小时
+  if (diffMinutes < 60) {
+    return `${diffMinutes}分钟前`;
+  }
+  // 小于24小时
+  if (diffHours < 24) {
+    return `${diffHours}小时前`;
+  }
+  // 昨天
+  if (diffDays === 1) {
+    return `昨天 ${date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false })}`;
+  }
+  // 前天
+  if (diffDays === 2) {
+    return `前天 ${date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false })}`;
+  }
+  // 更早的日期
+  return date.toLocaleString('zh-CN', { 
+    month: 'short', 
+    day: 'numeric', 
+    hour: '2-digit', 
+    minute: '2-digit',
+    hour12: false 
+  });
+}

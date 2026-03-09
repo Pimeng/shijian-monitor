@@ -47,6 +47,7 @@ export interface CardConfig {
   formatter: (value: number) => string;
   getValue: (data: HealthData) => number | string;
   getSubValue?: (data: HealthData) => string;
+  getTimestamp?: (data: HealthData) => number | undefined;
   showProgress?: boolean;
   progressMax?: number;
 }

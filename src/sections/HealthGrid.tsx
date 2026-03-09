@@ -29,6 +29,7 @@ const HealthGrid = memo(function HealthGrid({ data, loading, viewMode }: HealthG
       unit: 'BPM',
       formatter: (v: number) => `${v}`,
       getValue: (d) => d.heart?.v || 0,
+      getTimestamp: (d) => d.heart?.t,
       getSubValue: (d) => {
         const v = d.heart?.v || 0;
         if (v < 60) return '偏低';
@@ -43,6 +44,7 @@ const HealthGrid = memo(function HealthGrid({ data, loading, viewMode }: HealthG
       color: CARD_COLORS.sleep,
       formatter: (v: number) => formatSleepDuration(v),
       getValue: (d) => d.sleep?.v || 0,
+      getTimestamp: (d) => d.sleep?.t,
       getSubValue: (d) => {
         return formatSleepTimeRange(d.sleep);
       },
@@ -55,6 +57,7 @@ const HealthGrid = memo(function HealthGrid({ data, loading, viewMode }: HealthG
       unit: '%',
       formatter: (v: number) => `${v}`,
       getValue: (d) => d.saO2?.v || 0,
+      getTimestamp: (d) => d.saO2?.t,
       getSubValue: (d) => {
         const v = d.saO2?.v || 0;
         if (v >= 95) return '正常';
@@ -69,6 +72,7 @@ const HealthGrid = memo(function HealthGrid({ data, loading, viewMode }: HealthG
       color: CARD_COLORS.pressure,
       formatter: (v: number) => `${v}`,
       getValue: (d) => d.pressure?.v || 0,
+      getTimestamp: (d) => d.pressure?.t,
       getSubValue: (d) => {
         const v = d.pressure?.v || 0;
         if (v <= 33) return '放松';
@@ -83,6 +87,7 @@ const HealthGrid = memo(function HealthGrid({ data, loading, viewMode }: HealthG
       color: CARD_COLORS.exercise,
       formatter: (v: number) => getExerciseTypeName(v),
       getValue: (d) => d.exercise?.type || 0,
+      getTimestamp: (d) => d.exercise?.t,
       getSubValue: (d) => {
         if (!d.exercise) return '暂无运动记录';
         const parts: string[] = [];

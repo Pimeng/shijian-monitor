@@ -1,5 +1,7 @@
 import { memo } from 'react';
 import { motion } from 'framer-motion';
+import { Clock } from 'lucide-react';
+import { formatRelativeTime } from '@/lib/formatters';
 import type { HealthData } from '@/types/health';
 
 interface ActivityRingsProps {
@@ -99,6 +101,10 @@ const ActivityRings = memo(function ActivityRings({ data }: ActivityRingsProps) 
   const calorie = Math.round(data.calorie?.v || 0);
   const distanceMeters = data.distance?.v || 0;
   const distanceKm = (distanceMeters / 1000);
+  
+  // 获取最新的时间戳（使用步数的时间戳作为代表）
+  const timestamp = data.step?.t;
+  const updateTime = formatRelativeTime(timestamp);
 
   // 计算进度百分比（最多100%）
   const stepsProgress = Math.min((steps / RING_CONFIG.steps.max) * 100, 100);
@@ -142,11 +148,20 @@ const ActivityRings = memo(function ActivityRings({ data }: ActivityRingsProps) 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="rounded-2xl p-5 bg-transparent border border-white/10 hover:border-white/20 transition-all duration-300"
+      className="relative rounded-2xl p-5 bg-transparent border border-white/10 hover:border-white/20 transition-all duration-300"
     >
       <div className="flex items-center gap-6">
         {/* 左侧数据 */}
-        <div className="flex-1 grid grid-cols-2 gap-4">
+        <div className="flex-1">
+          {/* 更新时间戳 */}
+          {timestamp && (
+            <div className="flex items-center gap-1 text-xs text-white/40 mb-3">
+              <Clock size={10} />
+              <span>{updateTime}</span>
+            </div>
+          )}
+          
+          <div className="grid grid-cols-2 gap-4">
           {stats.map((stat, index) => (
             <motion.div
               key={stat.key}
@@ -171,6 +186,7 @@ const ActivityRings = memo(function ActivityRings({ data }: ActivityRingsProps) 
               </div>
             </motion.div>
           ))}
+          </div>
         </div>
 
         {/* 右侧圆环 */}
