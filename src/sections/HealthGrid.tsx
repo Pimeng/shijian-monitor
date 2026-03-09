@@ -7,6 +7,7 @@ import type { HealthData, CardConfig } from '@/types/health';
 import { CARD_COLORS } from '@/lib/constants';
 import {
   formatSleepDuration,
+  formatSleepTimeRange,
   getExerciseTypeName,
 } from '@/lib/formatters';
 import { Calendar, MapPin, User, Clock } from 'lucide-react';
@@ -43,10 +44,7 @@ const HealthGrid = memo(function HealthGrid({ data, loading, viewMode }: HealthG
       formatter: (v: number) => formatSleepDuration(v),
       getValue: (d) => d.sleep?.v || 0,
       getSubValue: (d) => {
-        const hours = (d.sleep?.v || 0) / (1000 * 60 * 60);
-        if (hours >= 7 && hours <= 9) return '睡眠质量良好';
-        if (hours < 7) return '睡眠不足';
-        return '睡眠充足';
+        return formatSleepTimeRange(d.sleep);
       },
     },
     {

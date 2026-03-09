@@ -103,3 +103,29 @@ export function getExerciseTypeName(type: number): string {
 export function formatIntensity(minutes: number): string {
   return `${minutes}`;
 }
+
+/**
+ * 格式化睡眠时间信息（入睡时间 - 起床时间）
+ * @param sleepData 睡眠数据对象，包含 t(时间戳) 和 v(睡眠时长毫秒)
+ * @returns 格式化后的睡眠时间段字符串
+ */
+export function formatSleepTimeRange(sleepData: { t: number; v: number } | undefined): string {
+  if (!sleepData || !sleepData.t) return '暂无睡眠记录';
+  
+  // 起床时间 = sleep.t (时间戳)
+  const wakeUpTime = new Date(sleepData.t);
+  // 入睡时间 = 起床时间 - 睡眠时长
+  const sleepDurationMs = sleepData.v || 0;
+  const fallAsleepTime = new Date(wakeUpTime.getTime() - sleepDurationMs);
+  
+  // 格式化时间为 HH:mm
+  const formatTime = (date: Date) => {
+    return date.toLocaleTimeString('zh-CN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+  };
+  
+  return `${formatTime(fallAsleepTime)} - ${formatTime(wakeUpTime)}`;
+}
