@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { motion } from 'framer-motion';
-import { Monitor, Smartphone, Wifi, WifiOff } from 'lucide-react';
+import { Monitor, Smartphone } from 'lucide-react';
 import { useWindowData, formatTimeAgo, isDeviceOnline, getAppDisplayName } from '@/hooks/useWindowData';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -125,12 +125,10 @@ const DeviceWindow = memo(function DeviceWindow() {
                     <div className="flex items-center gap-1.5 mt-0.5">
                       {isOnline ? (
                         <>
-                          <Wifi size={10} className="text-emerald-400" />
                           <span className="text-xs text-emerald-400">在线</span>
                         </>
                       ) : (
                         <>
-                          <WifiOff size={10} className="text-white/40" />
                           <span className="text-xs text-white/40">离线</span>
                         </>
                       )}
