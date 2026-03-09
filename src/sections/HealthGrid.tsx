@@ -414,7 +414,6 @@ function timeToMinutes(timeStr: string): number {
 const ScheduleCard = memo(function ScheduleCard({ index }: { index: number }) {
   const [currentTime, setCurrentTime] = useState(new Date());
   const {
-    config,
     loading,
     currentWeek,
     currentDay,
