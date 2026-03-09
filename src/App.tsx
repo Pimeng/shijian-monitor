@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/sections/Header';
 import DeviceWindow from '@/sections/DeviceWindow';
+import DuolingoCard from '@/sections/DuolingoCard';
 import HealthGrid from '@/sections/HealthGrid';
 import Footer from '@/sections/Footer';
 import { useHealthData } from '@/hooks/useHealthData';
@@ -38,6 +39,8 @@ function App() {
         />
 
         <DeviceWindow />
+
+        <DuolingoCard />
 
         {/* 错误提示 */}
         <AnimatePresence>

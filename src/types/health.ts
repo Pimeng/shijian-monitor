@@ -81,3 +81,17 @@ export interface WindowApiResponse {
   timestamp: string;
   data: WindowApiData;
 }
+
+// Duolingo 续火数据类型定义
+export interface DuolingoWildfireData {
+  length: number;
+  xpGoal: number;
+  updatedTimeZone: string;
+  updatedTimestamp: number;
+  startTimestamp: number;
+}
+
+export interface DuolingoWildfireResponse {
+  success: boolean;
+  data: DuolingoWildfireData;
+}

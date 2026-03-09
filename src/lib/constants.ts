@@ -6,6 +6,7 @@ export const ENDPOINTS = {
   health: '/api/health',
   healthCheck: '/api/health-check',
   window: '/api/window',
+  duolingoWildfire: '/api/duolingo/wildfire',
 };
 
 export const REFRESH_INTERVAL = 30000; // 30秒自动刷新
