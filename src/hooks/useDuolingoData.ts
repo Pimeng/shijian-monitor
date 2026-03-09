@@ -8,6 +8,7 @@ interface UseDuolingoDataReturn {
   loading: boolean;
   error: string | null;
   isToday: boolean;
+  refresh: () => Promise<void>;
 }
 
 // 判断时间戳是否为今天（基于指定时区）
@@ -93,5 +94,5 @@ export function useDuolingoData(): UseDuolingoDataReturn {
     };
   }, [fetchData]);
 
-  return { data, loading, error, isToday };
+  return { data, loading, error, isToday, refresh: fetchData };
 }

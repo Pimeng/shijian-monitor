@@ -7,6 +7,7 @@ interface UseWindowDataReturn {
   data: WindowApiData | null;
   loading: boolean;
   error: string | null;
+  refresh: () => Promise<void>;
 }
 
 function formatTimeAgo(dateString: string): string {
@@ -100,7 +101,7 @@ export function useWindowData(): UseWindowDataReturn {
     };
   }, [fetchData]);
 
-  return { data, loading, error };
+  return { data, loading, error, refresh: fetchData };
 }
 
 export { formatTimeAgo, isDeviceOnline, getAppDisplayName };

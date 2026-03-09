@@ -1,11 +1,15 @@
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Monitor, Smartphone } from 'lucide-react';
 import { useWindowData, formatTimeAgo, isDeviceOnline, getAppDisplayName } from '@/hooks/useWindowData';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const DeviceWindow = memo(function DeviceWindow() {
-  const { data, loading } = useWindowData();
+  const { data, loading, refresh } = useWindowData();
+
+  const handleClick = useCallback(async () => {
+    await refresh();
+  }, [refresh]);
 
   // 加载状态
   if (loading && !data) {
@@ -95,6 +99,7 @@ const DeviceWindow = memo(function DeviceWindow() {
                 scale: 1.02,
                 transition: { duration: 0.2 }
               }}
+              onClick={handleClick}
               className={`
                 rounded-2xl p-4
                 bg-transparent

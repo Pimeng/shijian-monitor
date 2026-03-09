@@ -6,6 +6,7 @@ import type { HealthData } from '@/types/health';
 
 interface ActivityRingsProps {
   data: HealthData;
+  onClick?: () => void;
 }
 
 // 圆环配置
@@ -94,7 +95,7 @@ function Ring({
   );
 }
 
-const ActivityRings = memo(function ActivityRings({ data }: ActivityRingsProps) {
+const ActivityRings = memo(function ActivityRings({ data, onClick }: ActivityRingsProps) {
   // 计算各项数值和进度
   const steps = data.step?.v || 0;
   const intensityMinutes = Math.floor((data.intensity?.v || 0) / (1000 * 60));
@@ -148,7 +149,8 @@ const ActivityRings = memo(function ActivityRings({ data }: ActivityRingsProps) 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="relative rounded-2xl p-5 bg-transparent border border-white/10 hover:border-white/20 transition-all duration-300"
+      onClick={onClick}
+      className="relative rounded-2xl p-5 bg-transparent border border-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer"
     >
       <div className="flex items-center gap-6">
         {/* 左侧数据 */}

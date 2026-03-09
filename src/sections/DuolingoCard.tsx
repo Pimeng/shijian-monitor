@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useDuolingoData } from '@/hooks/useDuolingoData';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -8,7 +8,11 @@ const FLAME_LIT_URL = 'https://d35aaqx5ub95lt.cloudfront.net/images/icons/398e42
 const FLAME_EXTINCT_URL = 'https://d35aaqx5ub95lt.cloudfront.net/images/icons/65b8a029d7a148218f1ac98a198f8b42.svg';
 
 const DuolingoCard = memo(function DuolingoCard() {
-  const { data, loading, isToday } = useDuolingoData();
+  const { data, loading, isToday, refresh } = useDuolingoData();
+
+  const handleClick = useCallback(async () => {
+    await refresh();
+  }, [refresh]);
 
   // 格式化日期
   const formatDate = (timestamp: number): string => {
@@ -91,6 +95,7 @@ const DuolingoCard = memo(function DuolingoCard() {
           scale: 1.01,
           transition: { duration: 0.2 }
         }}
+        onClick={handleClick}
         className={`
           rounded-2xl p-5
           bg-transparent

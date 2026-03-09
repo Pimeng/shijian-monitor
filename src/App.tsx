@@ -74,6 +74,7 @@ function App() {
           data={data} 
           loading={loading}
           viewMode={viewMode}
+          onRefresh={handleRefresh}
         />
 
         <Footer lastUpdated={lastUpdated} />

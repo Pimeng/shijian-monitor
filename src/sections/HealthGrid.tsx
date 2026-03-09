@@ -16,9 +16,13 @@ interface HealthGridProps {
   data: HealthData | null;
   loading: boolean;
   viewMode: 'grid' | 'list';
+  onRefresh?: () => Promise<void>;
 }
 
-const HealthGrid = memo(function HealthGrid({ data, loading, viewMode }: HealthGridProps) {
+const HealthGrid = memo(function HealthGrid({ data, loading, viewMode, onRefresh }: HealthGridProps) {
+  const handleCardClick = useCallback(async () => {
+    await onRefresh?.();
+  }, [onRefresh]);
   // 卡片配置 - 排除已整合到 ActivityRings 的指标
   const cardConfigs: CardConfig[] = useMemo(() => [
     {
@@ -161,7 +165,7 @@ const HealthGrid = memo(function HealthGrid({ data, loading, viewMode }: HealthG
       }`}>
         {/* 活动圆环组合卡片 - 总是占满一行 */}
         <div className="col-span-full">
-          <ActivityRings data={data} />
+          <ActivityRings data={data} onClick={handleCardClick} />
         </div>
         
         {cardConfigs.map((config, index) => (
@@ -170,11 +174,12 @@ const HealthGrid = memo(function HealthGrid({ data, loading, viewMode }: HealthG
             config={config}
             data={data}
             index={index}
+            onClick={handleCardClick}
           />
         ))}
         
         {/* 课程表卡片 */}
-        <ScheduleCard index={cardConfigs.length} />
+        <ScheduleCard index={cardConfigs.length} onClick={handleCardClick} />
       </div>
     </section>
   );
@@ -411,7 +416,7 @@ function timeToMinutes(timeStr: string): number {
 }
 
 // 课程表卡片组件
-const ScheduleCard = memo(function ScheduleCard({ index }: { index: number }) {
+const ScheduleCard = memo(function ScheduleCard({ index, onClick }: { index: number; onClick?: () => void }) {
   const [currentTime, setCurrentTime] = useState(new Date());
   const {
     loading,
@@ -529,6 +534,7 @@ const ScheduleCard = memo(function ScheduleCard({ index }: { index: number }) {
       transition={{ duration: 0.4, delay: index * 0.05 + 0.2, ease: [0.4, 0, 0.2, 1] }}
       whileHover={{ y: -4, transition: { duration: 0.2, ease: 'easeOut' } }}
       whileTap={{ scale: 0.98 }}
+      onClick={onClick}
       className="relative overflow-hidden rounded-2xl p-5 bg-white/[0.03] border border-white/5 cursor-pointer transition-shadow duration-200 hover:shadow-lg hover:shadow-black/20 group"
     >
       {/* 背景色装饰 */}

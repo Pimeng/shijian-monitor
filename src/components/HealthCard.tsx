@@ -20,6 +20,7 @@ interface HealthCardProps {
   config: CardConfig;
   data: HealthData;
   index: number;
+  onClick?: () => void;
 }
 
 const iconMap: Record<string, React.ElementType> = {
@@ -34,7 +35,7 @@ const iconMap: Record<string, React.ElementType> = {
   Zap,
 };
 
-const HealthCard = memo(function HealthCard({ config, data, index }: HealthCardProps) {
+const HealthCard = memo(function HealthCard({ config, data, index, onClick }: HealthCardProps) {
   const Icon = iconMap[config.icon] || Activity;
   const value = config.getValue(data);
   const subValue = config.getSubValue?.(data);
@@ -60,6 +61,7 @@ const HealthCard = memo(function HealthCard({ config, data, index }: HealthCardP
         transition: { duration: 0.2, ease: 'easeOut' }
       }}
       whileTap={{ scale: 0.98 }}
+      onClick={onClick}
       className={`
         relative overflow-hidden rounded-2xl p-5
         ${config.color.bg}
