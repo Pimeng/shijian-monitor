@@ -1,20 +1,11 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import { Monitor, Smartphone, Wifi, WifiOff } from 'lucide-react';
 import { useWindowData, formatTimeAgo, isDeviceOnline, getAppDisplayName } from '@/hooks/useWindowData';
 import { Skeleton } from '@/components/ui/skeleton';
 
-function getWindowTitleDisplay(title: string, isMobile: boolean): string {
-  if (!isMobile) return title;
-  // 手机息屏检测
-  if (title.startsWith('Android 系统 - ') || title.startsWith('指纹UI - ')) {
-    return '手机已息屏';
-  }
-  return title;
-}
-
 const DeviceWindow = memo(function DeviceWindow() {
-  const { data, loading, error } = useWindowData();
+  const { data, loading } = useWindowData();
 
   // 加载状态
   if (loading && !data) {
