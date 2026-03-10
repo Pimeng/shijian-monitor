@@ -350,5 +350,37 @@
     "tableId": 1,
     "teacher": "",
     "type": 0
+  },
+  {
+    "day": 2,
+    "endTime": "20:00",
+    "endWeek": 6,
+    "id": 17,
+    "level": 0,
+    "ownTime": true,
+    "room": "教学楼1栋1405",
+    "startNode": 11,
+    "startTime": "19:00",
+    "startWeek": 1,
+    "step": 2,
+    "tableId": 1,
+    "teacher": "",
+    "type": 0
+  },
+  {
+    "day": 4,
+    "endTime": "20:00",
+    "endWeek": 20,
+    "id": 17,
+    "level": 0,
+    "ownTime": true,
+    "room": "教学楼1栋1405",
+    "startNode": 11,
+    "startTime": "19:00",
+    "startWeek": 1,
+    "step": 2,
+    "tableId": 1,
+    "teacher": "",
+    "type": 0
   }
 ]

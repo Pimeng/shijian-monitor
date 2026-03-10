@@ -2,7 +2,7 @@
   {
     "color": "#ffff1744",
     "courseName": "形势与政策2",
-    "credit": 0.0,
+    "credit": 0,
     "id": 0,
     "note": "",
     "tableId": 1
@@ -10,7 +10,7 @@
   {
     "color": "#fffa6278",
     "courseName": "大模型集成应用开发（校企）",
-    "credit": 0.0,
+    "credit": 0,
     "id": 1,
     "note": "",
     "tableId": 1
@@ -18,7 +18,7 @@
   {
     "color": "#ff2979ff",
     "courseName": "大学英语2",
-    "credit": 0.0,
+    "credit": 0,
     "id": 2,
     "note": "",
     "tableId": 1
@@ -26,7 +26,7 @@
   {
     "color": "#ff1de9b6",
     "courseName": "项目开发实训（校企）",
-    "credit": 0.0,
+    "credit": 0,
     "id": 3,
     "note": "",
     "tableId": 1
@@ -34,7 +34,7 @@
   {
     "color": "#ffa375ff",
     "courseName": "中共党史",
-    "credit": 0.0,
+    "credit": 0,
     "id": 4,
     "note": "",
     "tableId": 1
@@ -42,7 +42,7 @@
   {
     "color": "#ffff9100",
     "courseName": "大学体育2",
-    "credit": 0.0,
+    "credit": 0,
     "id": 5,
     "note": "",
     "tableId": 1
@@ -50,7 +50,7 @@
   {
     "color": "#ffff3d00",
     "courseName": "软件测试基础（校企）",
-    "credit": 0.0,
+    "credit": 0,
     "id": 6,
     "note": "",
     "tableId": 1
@@ -58,7 +58,7 @@
   {
     "color": "#ff2196f3",
     "courseName": "Selenium自动化测试（校企）",
-    "credit": 0.0,
+    "credit": 0,
     "id": 7,
     "note": "",
     "tableId": 1
@@ -66,7 +66,7 @@
   {
     "color": "#ff005caf",
     "courseName": "大学语文",
-    "credit": 0.0,
+    "credit": 0,
     "id": 8,
     "note": "",
     "tableId": 1
@@ -74,7 +74,7 @@
   {
     "color": "#ffff1744",
     "courseName": "大学生心理健康教育2",
-    "credit": 0.0,
+    "credit": 0,
     "id": 9,
     "note": "",
     "tableId": 1
@@ -82,7 +82,7 @@
   {
     "color": "#fffa6278",
     "courseName": "职业发展与就业指导2(25软件3班（校企）)",
-    "credit": 0.0,
+    "credit": 0,
     "id": 10,
     "note": "",
     "tableId": 1
@@ -90,7 +90,7 @@
   {
     "color": "#ff2979ff",
     "courseName": "Linux操作系统（校企）",
-    "credit": 0.0,
+    "credit": 0,
     "id": 11,
     "note": "",
     "tableId": 1
@@ -98,7 +98,7 @@
   {
     "color": "#ff1de9b6",
     "courseName": "国家安全教育",
-    "credit": 0.0,
+    "credit": 0,
     "id": 12,
     "note": "",
     "tableId": 1
@@ -106,7 +106,7 @@
   {
     "color": "#ffa375ff",
     "courseName": "Python Web开发技术（校企）",
-    "credit": 0.0,
+    "credit": 0,
     "id": 13,
     "note": "",
     "tableId": 1
@@ -114,7 +114,7 @@
   {
     "color": "#ffff9100",
     "courseName": "Python基础应用",
-    "credit": 0.0,
+    "credit": 0,
     "id": 14,
     "note": "",
     "tableId": 1
@@ -122,7 +122,7 @@
   {
     "color": "#ffff3d00",
     "courseName": "低代码开发技术（校企）",
-    "credit": 0.0,
+    "credit": 0,
     "id": 15,
     "note": "",
     "tableId": 1
@@ -130,8 +130,16 @@
   {
     "color": "#ffd81de9",
     "courseName": "HICP课程",
-    "credit": 0.0,
+    "credit": 0,
     "id": 16,
+    "note": "",
+    "tableId": 1
+  },
+  {
+    "color": "#ffff3d00",
+    "courseName": "晚自习",
+    "credit": 0,
+    "id": 17,
     "note": "",
     "tableId": 1
   }
