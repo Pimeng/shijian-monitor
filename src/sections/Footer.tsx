@@ -43,6 +43,12 @@ const Footer = memo(function Footer({ lastUpdated }: FooterProps) {
         </div>
       </div>
 
+      <div className="mt-4 flex items-center justify-center gap-1 text-[10px] text-white/40">
+        <span><a href="http://beian.miit.gov.cn" target="_blank" rel="noopener noreferrer">粤ICP备2025410684号-2</a></span>
+        <span>·</span>
+        <span><a href="https://beian.mps.gov.cn/#/query/webSearch?code=44538102000130" target="_blank" rel="noopener noreferrer">粤公网安备44538102000130号</a></span>
+      </div>
+
       <div className="mt-4 flex items-center justify-center gap-1 text-[10px] text-white/20">
         <span>Made with</span>
         <Heart size={10} className="text-red-400/60 fill-red-400/60" />

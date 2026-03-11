@@ -14,7 +14,7 @@ const RING_CONFIG = {
   steps: {
     color: '#3B82F6', // 蓝色
     bgColor: 'rgba(59, 130, 246, 0.15)',
-    max: 10000,
+    max: 13000,
     label: '步数',
     unit: '步',
   },
@@ -35,7 +35,7 @@ const RING_CONFIG = {
   distance: {
     color: '#EF4444', // 红色
     bgColor: 'rgba(239, 68, 68, 0.15)',
-    max: 5000, // 5km = 5000m
+    max: 6000, // 5km = 5000m
     label: '距离',
     unit: '公里',
   },

@@ -149,7 +149,7 @@ const DuolingoCard = memo(function DuolingoCard() {
               >
                 {data.length}
               </motion.span>
-              <span className="text-sm text-white/50">天续火</span>
+              <span className="text-sm text-white/50">天</span>
               
               {/* 今日状态标签 */}
               <motion.span
@@ -164,7 +164,7 @@ const DuolingoCard = memo(function DuolingoCard() {
                   }
                 `}
               >
-                {isToday ? '今日已学' : '今日未学'}
+                {isToday ? '已学' : '未学'}
               </motion.span>
             </div>
 
