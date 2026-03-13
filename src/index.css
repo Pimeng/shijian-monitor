@@ -101,3 +101,59 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ==================== GoogleSans - 英文 ==================== */
+@font-face {
+  font-family: 'GoogleSans';
+  src: url('/assets/fonts/googlesans/GoogleSans.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ==================== MiSans - 中文回退 ==================== */
+/* 细体 */
+@font-face {
+  font-family: 'MiSans';
+  src: url('/assets/fonts/misans/MiSans-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 常规 */
+@font-face {
+  font-family: 'MiSans';
+  src: url('/assets/fonts/misans/MiSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 中等 */
+@font-face {
+  font-family: 'MiSans';
+  src: url('/assets/fonts/misans/MiSans-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 粗体 */
+@font-face {
+  font-family: 'MiSans';
+  src: url('/assets/fonts/misans/MiSans-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ==================== 应用 ==================== */
+:root {
+  --font-sans: 'GoogleSans', 'MiSans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-weight: 400;
+}
