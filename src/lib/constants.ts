@@ -4,6 +4,7 @@ export const API_BASE_URL = 'https://get.vivo-health.07210700.xyz';
 
 export const ENDPOINTS = {
   health: '/api/health',
+  healthDetail: '/api/health-detail',
   healthCheck: '/api/health-check',
   window: '/api/window',
   duolingoWildfire: '/api/duolingo/wildfire',

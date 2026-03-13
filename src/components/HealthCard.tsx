@@ -10,17 +10,19 @@ import {
   MapPin, 
   Dumbbell,
   Zap,
-  Clock
+  Clock,
+  ChevronRight
 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { formatRelativeTime } from '@/lib/formatters';
-import type { CardConfig, HealthData } from '@/types/health';
+import type { CardConfig, HealthData, HealthDetailType } from '@/types/health';
 
 interface HealthCardProps {
   config: CardConfig;
   data: HealthData;
   index: number;
   onClick?: () => void;
+  detailType?: HealthDetailType;
 }
 
 const iconMap: Record<string, React.ElementType> = {
@@ -35,7 +37,7 @@ const iconMap: Record<string, React.ElementType> = {
   Zap,
 };
 
-const HealthCard = memo(function HealthCard({ config, data, index, onClick }: HealthCardProps) {
+const HealthCard = memo(function HealthCard({ config, data, index, onClick, detailType }: HealthCardProps) {
   const Icon = iconMap[config.icon] || Activity;
   const value = config.getValue(data);
   const subValue = config.getSubValue?.(data);
@@ -46,6 +48,9 @@ const HealthCard = memo(function HealthCard({ config, data, index, onClick }: He
   const progressValue = typeof value === 'number' && config.showProgress && config.progressMax
     ? Math.min((value / config.progressMax) * 100, 100)
     : 0;
+  
+  // 是否有详细数据可查看
+  const hasDetail = !!detailType;
 
   return (
     <motion.div
@@ -88,13 +93,21 @@ const HealthCard = memo(function HealthCard({ config, data, index, onClick }: He
             </span>
           </div>
           
-          {/* 更新时间戳 */}
-          {timestamp && (
-            <div className="flex items-center gap-1 text-xs text-white/40">
-              <Clock size={10} />
-              <span>{updateTime}</span>
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            {/* 更新时间戳 */}
+            {timestamp && (
+              <div className="flex items-center gap-1 text-xs text-white/40">
+                <Clock size={10} />
+                <span>{updateTime}</span>
+              </div>
+            )}
+            {/* 可查看详情的指示器 */}
+            {hasDetail && (
+              <div className="flex items-center text-xs text-white/30 group-hover:text-white/50 transition-colors">
+                <ChevronRight size={14} />
+              </div>
+            )}
+          </div>
         </div>
 
         {/* 数值 */}

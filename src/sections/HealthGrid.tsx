@@ -2,14 +2,16 @@ import { memo, useMemo, useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import HealthCard from '@/components/HealthCard';
 import ActivityRings from '@/components/ActivityRings';
+import HealthDetailDialog from '@/components/HealthDetailDialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { HealthData, CardConfig } from '@/types/health';
+import type { HealthData, CardConfig, HealthDetailType } from '@/types/health';
 import { CARD_COLORS } from '@/lib/constants';
 import {
   formatSleepDuration,
   formatSleepTimeRange,
   getExerciseTypeName,
 } from '@/lib/formatters';
+import { useHealthDetail } from '@/hooks/useHealthDetail';
 import { Calendar, MapPin, User, Clock } from 'lucide-react';
 
 interface HealthGridProps {
@@ -19,12 +21,32 @@ interface HealthGridProps {
   onRefresh?: () => Promise<void>;
 }
 
-const HealthGrid = memo(function HealthGrid({ data, loading, viewMode, onRefresh }: HealthGridProps) {
-  const handleCardClick = useCallback(async () => {
-    await onRefresh?.();
-  }, [onRefresh]);
-  // 卡片配置 - 排除已整合到 ActivityRings 的指标
-  const cardConfigs: CardConfig[] = useMemo(() => [
+const HealthGrid = memo(function HealthGrid({ data, loading, viewMode }: HealthGridProps) {
+  const [selectedDetailType, setSelectedDetailType] = useState<HealthDetailType | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  
+  const { data: detailData, loading: detailLoading, error: detailError, fetchDetail, clearData } = useHealthDetail();
+
+  // 处理卡片点击 - 打开详情弹窗
+  const handleCardClick = useCallback((detailType?: HealthDetailType) => {
+    if (detailType) {
+      setSelectedDetailType(detailType);
+      setIsDialogOpen(true);
+      fetchDetail(detailType);
+    }
+  }, [fetchDetail]);
+
+  // 处理弹窗关闭
+  const handleDialogClose = useCallback(() => {
+    setIsDialogOpen(false);
+    setTimeout(() => {
+      setSelectedDetailType(null);
+      clearData();
+    }, 200);
+  }, [clearData]);
+
+  // 卡片配置 - 排除已整合到 ActivityRings 的指标，添加 detailType 映射
+  const cardConfigs: (CardConfig & { detailType?: HealthDetailType })[] = useMemo(() => [
     {
       id: 'heart',
       title: '心率',
@@ -40,6 +62,7 @@ const HealthGrid = memo(function HealthGrid({ data, loading, viewMode, onRefresh
         if (v > 100) return '偏高';
         return '正常范围';
       },
+      detailType: 'rate',
     },
     {
       id: 'sleep',
@@ -52,6 +75,7 @@ const HealthGrid = memo(function HealthGrid({ data, loading, viewMode, onRefresh
       getSubValue: (d) => {
         return formatSleepTimeRange(d.sleep);
       },
+      // 睡眠没有详细数据 API
     },
     {
       id: 'saO2',
@@ -68,6 +92,7 @@ const HealthGrid = memo(function HealthGrid({ data, loading, viewMode, onRefresh
         if (v >= 90) return '略低';
         return '需关注';
       },
+      detailType: 'saO2',
     },
     {
       id: 'pressure',
@@ -83,6 +108,7 @@ const HealthGrid = memo(function HealthGrid({ data, loading, viewMode, onRefresh
         if (v <= 66) return '中等';
         return '偏高';
       },
+      detailType: 'pressure',
     },
     {
       id: 'exercise',
@@ -107,6 +133,7 @@ const HealthGrid = memo(function HealthGrid({ data, loading, viewMode, onRefresh
         }
         return parts.join(' · ') || '运动完成';
       },
+      // 运动没有详细数据 API
     },
   ], []);
 
@@ -165,7 +192,10 @@ const HealthGrid = memo(function HealthGrid({ data, loading, viewMode, onRefresh
       }`}>
         {/* 活动圆环组合卡片 - 总是占满一行 */}
         <div className="col-span-full">
-          <ActivityRings data={data} onClick={handleCardClick} />
+          <ActivityRings 
+            data={data} 
+            onStatClick={(detailType) => handleCardClick(detailType)}
+          />
         </div>
         
         {cardConfigs.map((config, index) => (
@@ -174,13 +204,24 @@ const HealthGrid = memo(function HealthGrid({ data, loading, viewMode, onRefresh
             config={config}
             data={data}
             index={index}
-            onClick={handleCardClick}
+            detailType={config.detailType}
+            onClick={() => handleCardClick(config.detailType)}
           />
         ))}
         
         {/* 课程表卡片 */}
-        <ScheduleCard index={cardConfigs.length} onClick={handleCardClick} />
+        <ScheduleCard index={cardConfigs.length} />
       </div>
+      
+      {/* 健康详情弹窗 */}
+      <HealthDetailDialog
+        isOpen={isDialogOpen}
+        onClose={handleDialogClose}
+        type={selectedDetailType}
+        data={detailData}
+        loading={detailLoading}
+        error={detailError}
+      />
     </section>
   );
 });
@@ -533,9 +574,9 @@ const ScheduleCard = memo(function ScheduleCard({ index, onClick }: { index: num
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.4, delay: index * 0.05 + 0.2, ease: [0.4, 0, 0.2, 1] }}
       whileHover={{ y: -4, transition: { duration: 0.2, ease: 'easeOut' } }}
-      whileTap={{ scale: 0.98 }}
+      whileTap={onClick ? { scale: 0.98 } : undefined}
       onClick={onClick}
-      className="relative overflow-hidden rounded-2xl p-5 bg-white/[0.03] border border-white/5 cursor-pointer transition-shadow duration-200 hover:shadow-lg hover:shadow-black/20 group"
+      className={`relative overflow-hidden rounded-2xl p-5 bg-white/[0.03] border border-white/5 transition-shadow duration-200 hover:shadow-lg hover:shadow-black/20 group ${onClick ? 'cursor-pointer' : ''}`}
     >
       {/* 背景色装饰 */}
       {displayCourse && (

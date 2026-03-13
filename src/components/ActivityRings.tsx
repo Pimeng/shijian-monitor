@@ -1,12 +1,12 @@
 import { memo } from 'react';
 import { motion } from 'framer-motion';
-import { Clock } from 'lucide-react';
+import { Clock, ChevronRight } from 'lucide-react';
 import { formatRelativeTime } from '@/lib/formatters';
-import type { HealthData } from '@/types/health';
+import type { HealthData, HealthDetailType } from '@/types/health';
 
 interface ActivityRingsProps {
   data: HealthData;
-  onClick?: () => void;
+  onStatClick?: (detailType: HealthDetailType) => void;
 }
 
 // 圆环配置
@@ -17,6 +17,7 @@ const RING_CONFIG = {
     max: 13000,
     label: '步数',
     unit: '步',
+    detailType: 'step' as HealthDetailType,
   },
   intensity: {
     color: '#F59E0B', // 橙色
@@ -24,6 +25,7 @@ const RING_CONFIG = {
     max: 30,
     label: '中高强度',
     unit: '分钟',
+    // 中高强度没有详细数据 API
   },
   calorie: {
     color: '#10B981', // 绿色
@@ -31,6 +33,7 @@ const RING_CONFIG = {
     max: 500,
     label: '热量',
     unit: '千卡',
+    detailType: 'calorie' as HealthDetailType,
   },
   distance: {
     color: '#EF4444', // 红色
@@ -38,6 +41,7 @@ const RING_CONFIG = {
     max: 6000, // 5km = 5000m
     label: '距离',
     unit: '公里',
+    detailType: 'distance' as HealthDetailType,
   },
 };
 
@@ -95,7 +99,7 @@ function Ring({
   );
 }
 
-const ActivityRings = memo(function ActivityRings({ data, onClick }: ActivityRingsProps) {
+const ActivityRings = memo(function ActivityRings({ data, onStatClick }: ActivityRingsProps) {
   // 计算各项数值和进度
   const steps = data.step?.v || 0;
   const intensityMinutes = Math.floor((data.intensity?.v || 0) / (1000 * 60));
@@ -113,7 +117,18 @@ const ActivityRings = memo(function ActivityRings({ data, onClick }: ActivityRin
   const calorieProgress = Math.min((calorie / RING_CONFIG.calorie.max) * 100, 100);
   const distanceProgress = Math.min((distanceMeters / RING_CONFIG.distance.max) * 100, 100);
 
-  const stats = [
+  const stats: {
+    key: string;
+    value: number | string;
+    progress: number;
+    displayMax: number | string;
+    color: string;
+    bgColor: string;
+    max: number;
+    label: string;
+    unit: string;
+    detailType?: HealthDetailType;
+  }[] = [
     { 
       key: 'steps', 
       value: steps, 
@@ -144,13 +159,19 @@ const ActivityRings = memo(function ActivityRings({ data, onClick }: ActivityRin
     },
   ];
 
+  // 处理统计项点击
+  const handleStatClick = (detailType?: HealthDetailType) => {
+    if (detailType && onStatClick) {
+      onStatClick(detailType);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      onClick={onClick}
-      className="relative rounded-2xl p-5 bg-transparent border border-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer"
+      className="relative rounded-2xl p-5 bg-transparent border border-white/10 hover:border-white/20 transition-all duration-300"
     >
       <div className="flex items-center gap-6">
         {/* 左侧数据 */}
@@ -170,6 +191,11 @@ const ActivityRings = memo(function ActivityRings({ data, onClick }: ActivityRin
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: index * 0.1 + 0.3 }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleStatClick(stat.detailType);
+              }}
+              className={`group/stat ${stat.detailType ? 'cursor-pointer hover:bg-white/5 -m-2 p-2 rounded-lg transition-colors' : ''}`}
             >
               <div className="flex items-center gap-1.5 mb-1">
                 <div 
@@ -177,6 +203,9 @@ const ActivityRings = memo(function ActivityRings({ data, onClick }: ActivityRin
                   style={{ backgroundColor: stat.color }}
                 />
                 <span className="text-xs text-white/60">{stat.label}</span>
+                {stat.detailType && (
+                  <ChevronRight size={12} className="text-white/20 opacity-0 group-hover/stat:opacity-100 transition-opacity" />
+                )}
               </div>
               <div className="flex items-baseline gap-1">
                 <span className="text-xl font-semibold text-white">

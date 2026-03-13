@@ -96,3 +96,94 @@ export interface DuolingoWildfireResponse {
   success: boolean;
   data: DuolingoWildfireData;
 }
+
+// 健康详细数据类型定义
+export type HealthDetailType = 'pressure' | 'calorie' | 'distance' | 'rate' | 'saO2' | 'step';
+
+// 详细数据中的时间点值
+export interface IndexTimeValue {
+  t: number; // 时间戳
+  v: number; // 数值
+}
+
+// 压力详细数据
+export interface PressureDetailItem {
+  t: number;
+  up: number;
+  down: number;
+  average: number;
+  indexTimeValues: IndexTimeValue[];
+}
+
+// 心率详细数据
+export interface RateDetailItem {
+  t: number;
+  up: number;
+  down: number;
+  average: number;
+  rateEarliest?: number;
+}
+
+// 血氧详细数据
+export interface SaO2DetailItem {
+  t: number;
+  up: number;
+  down: number;
+  average: number;
+}
+
+// 步数/卡路里/距离详细数据
+export interface StepCalorieDistanceDetailItem {
+  t: number;
+  v: number;
+  indexTimeValues: IndexTimeValue[];
+}
+
+// 心率详细数据结构（实际 API 响应）
+export interface RateDetailData {
+  rate?: RateDetailItem[];
+  restRate?: RateDetailItem[];
+  stepRate?: RateDetailItem[];
+  rateEarliest?: number;
+}
+
+// 压力详细数据结构
+export interface PressureDetailData {
+  detail?: PressureDetailItem[];
+}
+
+// 血氧详细数据结构
+export interface SaO2DetailData {
+  detail?: SaO2DetailItem[];
+}
+
+// 步数详细数据结构
+export interface StepDetailData {
+  detail?: StepCalorieDistanceDetailItem[];
+}
+
+// 卡路里详细数据结构
+export interface CalorieDetailData {
+  detail?: StepCalorieDistanceDetailItem[];
+}
+
+// 距离详细数据结构
+export interface DistanceDetailData {
+  detail?: StepCalorieDistanceDetailItem[];
+}
+
+// 通用详细数据响应
+export type HealthDetailData = 
+  | RateDetailData 
+  | PressureDetailData 
+  | SaO2DetailData 
+  | StepDetailData 
+  | CalorieDetailData 
+  | DistanceDetailData;
+
+export interface HealthDetailResponse {
+  success: boolean;
+  type: HealthDetailType;
+  description: string;
+  data: HealthDetailData;
+}
