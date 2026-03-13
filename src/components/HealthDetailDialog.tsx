@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState, useRef, useEffect, useCallback } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '@/components/ui/button';
 import {
   Activity,
   Flame,
@@ -18,6 +19,9 @@ import {
   TrendingDown,
   Clock,
   AlertCircle,
+  X,
+  Maximize2,
+  Minimize2,
 } from 'lucide-react';
 import {
   LineChart,
@@ -37,6 +41,7 @@ import type {
   StepCalorieDistanceDetailItem,
 } from '@/types/health';
 import { formatRelativeTime } from '@/lib/formatters';
+import { cn } from '@/lib/utils';
 
 interface HealthDetailDialogProps {
   isOpen: boolean;
@@ -121,6 +126,12 @@ function formatChartTime(timestamp: number): string {
   return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
 }
 
+// 默认尺寸
+const DEFAULT_WIDTH = 576; // sm:max-w-xl ≈ 576px
+const DEFAULT_HEIGHT = 'auto';
+const MIN_WIDTH = 360;
+const MIN_HEIGHT = 300;
+
 const HealthDetailDialog = memo(function HealthDetailDialog({
   isOpen,
   onClose,
@@ -129,6 +140,126 @@ const HealthDetailDialog = memo(function HealthDetailDialog({
   loading,
   error,
 }: HealthDetailDialogProps) {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [size, setSize] = useState({ width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT as number | 'auto' });
+  const [isDragging, setIsDragging] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
+  const [isHoveringResize, setIsHoveringResize] = useState(false);
+  const dragRef = useRef<{ startX: number; startY: number; initialX: number; initialY: number } | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  // 重置位置和大小
+  const resetPosition = useCallback(() => {
+    setPosition({ x: 0, y: 0 });
+    setSize({ width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT });
+    setIsMaximized(false);
+  }, []);
+
+  // 当对话框打开时重置位置
+  useEffect(() => {
+    if (isOpen) {
+      resetPosition();
+    }
+  }, [isOpen, resetPosition]);
+
+  // 处理拖拽开始
+  const handleDragStart = useCallback((e: React.MouseEvent) => {
+    // 只允许左键拖拽
+    if (e.button !== 0) return;
+    
+    // 如果正在最大化状态，不拖拽
+    if (isMaximized) return;
+    
+    setIsDragging(true);
+    dragRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      initialX: position.x,
+      initialY: position.y,
+    };
+    e.preventDefault();
+  }, [position, isMaximized]);
+
+  // 处理拖拽中
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging || !dragRef.current) return;
+
+      const dx = e.clientX - dragRef.current.startX;
+      const dy = e.clientY - dragRef.current.startY;
+
+      setPosition({
+        x: dragRef.current.initialX + dx,
+        y: dragRef.current.initialY + dy,
+      });
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+      dragRef.current = null;
+    };
+
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging]);
+
+  // 处理最大化/还原
+  const toggleMaximize = useCallback(() => {
+    if (isMaximized) {
+      setPosition({ x: 0, y: 0 });
+      setSize({ width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT });
+    } else {
+      setPosition({ x: 0, y: 0 });
+      setSize({ width: window.innerWidth - 40, height: window.innerHeight - 40 });
+    }
+    setIsMaximized(!isMaximized);
+  }, [isMaximized]);
+
+  // 处理手动调整大小
+  const handleResize = useCallback((e: React.MouseEvent) => {
+    if (isMaximized) return;
+    
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startWidth = typeof size.width === 'number' ? size.width : DEFAULT_WIDTH;
+    const startHeight = typeof size.height === 'number' ? size.height : 500;
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      const newWidth = Math.max(MIN_WIDTH, startWidth + (moveEvent.clientX - startX));
+      const newHeight = Math.max(MIN_HEIGHT, startHeight + (moveEvent.clientY - startY));
+      setSize({ width: newWidth, height: newHeight });
+    };
+
+    const handleMouseUp = () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      setIsHoveringResize(false);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+    e.preventDefault();
+  }, [isMaximized, size]);
+
+  // 处理键盘事件 - ESC 关闭
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!type) return null;
 
   const config = typeConfig[type];
@@ -358,19 +489,79 @@ const HealthDetailDialog = memo(function HealthDetailDialog({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-xl bg-black border-white/10 text-white">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-xl">
-            <Icon className={config.color} size={24} />
-            {config.title}
-          </DialogTitle>
-          <DialogDescription className="text-white/50">
-            {data?.description || '查看今日详细数据记录'}
-          </DialogDescription>
-        </DialogHeader>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent
+        ref={dialogRef}
+        showCloseButton={false}
+        className={cn(
+          "bg-black border-white/10 text-white overflow-hidden p-0",
+          isDragging && "cursor-grabbing select-none",
+          !isMaximized && "resize-handle"
+        )}
+        style={{
+          width: size.width,
+          height: size.height === 'auto' ? 'auto' : size.height,
+          maxWidth: isMaximized ? 'calc(100vw - 40px)' : 'none',
+          maxHeight: isMaximized ? 'calc(100vh - 40px)' : 'none',
+          // 保留默认居中 transform，再加上拖动偏移
+          transform: `translate(calc(-50% + ${position.x}px), calc(-50% + ${position.y}px))`,
+          transition: isDragging ? 'none' : 'transform 0.1s ease-out',
+          minWidth: MIN_WIDTH,
+          minHeight: MIN_HEIGHT,
+        }}
+        onPointerDownOutside={onClose}
+        onEscapeKeyDown={onClose}
+      >
+        {/* 可拖拽的标题栏 */}
+        <div 
+          className={cn(
+            "flex items-center justify-between px-4 py-3 border-b border-white/10 bg-white/5",
+            !isMaximized && "cursor-grab active:cursor-grabbing"
+          )}
+          onMouseDown={handleDragStart}
+        >
+          <DialogHeader className="m-0 p-0">
+            <DialogTitle className="flex items-center gap-2 text-xl select-none">
+              <Icon className={config.color} size={24} />
+              {config.title}
+            </DialogTitle>
+            <DialogDescription className="text-white/50 sr-only">
+              {data?.description || '查看今日详细数据记录'}
+            </DialogDescription>
+          </DialogHeader>
+          
+          {/* 窗口控制按钮 */}
+          <div className="flex items-center gap-1" onMouseDown={(e) => e.stopPropagation()}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-white/60 hover:text-white hover:bg-white/10"
+              onClick={toggleMaximize}
+              title={isMaximized ? "还原" : "最大化"}
+            >
+              {isMaximized ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-white/60 hover:text-white hover:bg-red-500/80"
+              onClick={onClose}
+              title="关闭 (ESC)"
+            >
+              <X size={18} />
+            </Button>
+          </div>
+        </div>
 
-        <div className="mt-4">
+        {/* 内容区域 */}
+        <div 
+          ref={contentRef}
+          className="p-4 overflow-auto"
+          style={{ 
+            height: size.height === 'auto' ? 'auto' : `calc(${size.height}px - 60px)`,
+            maxHeight: size.height === 'auto' ? '60vh' : undefined 
+          }}
+        >
           {loading && (
             <div className="space-y-4">
               <div className="grid grid-cols-3 gap-3">
@@ -390,7 +581,7 @@ const HealthDetailDialog = memo(function HealthDetailDialog({
           )}
 
           {!loading && !error && data && (
-            <ScrollArea className="max-h-[60vh]">
+            <ScrollArea className={size.height === 'auto' ? "max-h-[50vh]" : "h-full"}>
               {latestItem ? (
                 <>
                   {/* 数据日期 */}
@@ -428,6 +619,41 @@ const HealthDetailDialog = memo(function HealthDetailDialog({
             </ScrollArea>
           )}
         </div>
+
+        {/* 右下角调整大小手柄 - 仅在非最大化时显示 */}
+        {!isMaximized && (
+          <div
+            className={cn(
+              "absolute bottom-0 right-0 w-5 h-5 cursor-nwse-resize z-50",
+              "flex items-end justify-end p-0.5",
+              "hover:bg-white/10 transition-colors rounded-tl-lg",
+              isHoveringResize && "bg-white/10"
+            )}
+            onMouseDown={handleResize}
+            onMouseEnter={() => setIsHoveringResize(true)}
+            onMouseLeave={() => setIsHoveringResize(false)}
+            title="调整大小"
+          >
+            <svg 
+              width="12" 
+              height="12" 
+              viewBox="0 0 12 12" 
+              fill="none" 
+              className="text-white/40"
+            >
+              <path d="M11 5V11H5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+              <path d="M11 1V11H1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5"/>
+            </svg>
+          </div>
+        )}
+
+        {/* 拖动时的遮罩层 - 防止iframe或其他元素拦截鼠标事件 */}
+        {isDragging && (
+          <div 
+            className="fixed inset-0 z-[9999] cursor-grabbing"
+            style={{ pointerEvents: 'auto' }}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );
