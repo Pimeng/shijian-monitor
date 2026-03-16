@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import type { WindowApiResponse, WindowApiData } from '@/types/health';
+import type { WindowApiResponse, WindowApiData, IpLocationApiResponse, IpLocationApiData } from '@/types/health';
 import { API_BASE_URL, ENDPOINTS } from '@/lib/constants';
 
 interface UseWindowDataReturn {
   data: WindowApiData | null;
+  ipData: IpLocationApiData | null;
   loading: boolean;
   error: string | null;
   refresh: () => Promise<void>;
@@ -30,8 +31,8 @@ function isDeviceOnline(accessTime: string): boolean {
   const date = new Date(accessTime);
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
-  // 5分钟内活跃视为在线
-  return diffMs < 5 * 60 * 1000;
+  // 1分钟内活跃视为在线
+  return diffMs < 1 * 60 * 1000;
 }
 
 function getAppDisplayName(app: string | null, windowTitle: string): string {
@@ -48,28 +49,53 @@ function getAppDisplayName(app: string | null, windowTitle: string): string {
 
 export function useWindowData(): UseWindowDataReturn {
   const [data, setData] = useState<WindowApiData | null>(null);
+  const [ipData, setIpData] = useState<IpLocationApiData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await axios.get<WindowApiResponse>(
-        `${API_BASE_URL}${ENDPOINTS.window}`,
-        { timeout: 10000 }
-      );
+      // 同时获取窗口数据和 IP 地址数据
+      const [windowResponse, ipResponse] = await Promise.all([
+        axios.get<WindowApiResponse>(
+          `${API_BASE_URL}${ENDPOINTS.window}`,
+          { timeout: 10000 }
+        ),
+        axios.get<IpLocationApiResponse>(
+          `${API_BASE_URL}${ENDPOINTS.ipAddress}`,
+          { timeout: 10000 }
+        ),
+      ]);
 
-      let responseData = response.data;
-      if (typeof responseData === 'string') {
+      let windowResponseData = windowResponse.data;
+      if (typeof windowResponseData === 'string') {
         try {
-          responseData = JSON.parse(responseData);
+          windowResponseData = JSON.parse(windowResponseData);
         } catch {
-          setError('数据格式错误');
+          setError('窗口数据格式错误');
           return;
         }
       }
 
-      if (responseData.success && responseData.data) {
-        setData(responseData.data);
+      let ipResponseData = ipResponse.data;
+      if (typeof ipResponseData === 'string') {
+        try {
+          ipResponseData = JSON.parse(ipResponseData);
+        } catch {
+          setError('IP 数据格式错误');
+          return;
+        }
+      }
+
+      if (windowResponseData.success && windowResponseData.data) {
+        setData(windowResponseData.data);
+      }
+
+      if (ipResponseData.success && ipResponseData.data) {
+        setIpData(ipResponseData.data);
+      }
+
+      if (windowResponseData.success || ipResponseData.success) {
         setError(null);
       } else {
         setError('获取数据失败');
@@ -80,7 +106,7 @@ export function useWindowData(): UseWindowDataReturn {
       } else {
         setError('未知错误');
       }
-      console.error('Window data fetch error:', err);
+      console.error('Window/IP data fetch error:', err);
     } finally {
       setLoading(false);
     }
@@ -101,7 +127,7 @@ export function useWindowData(): UseWindowDataReturn {
     };
   }, [fetchData]);
 
-  return { data, loading, error, refresh: fetchData };
+  return { data, ipData, loading, error, refresh: fetchData };
 }
 
 export { formatTimeAgo, isDeviceOnline, getAppDisplayName };

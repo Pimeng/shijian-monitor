@@ -30,7 +30,7 @@ const Footer = memo(function Footer({ lastUpdated }: FooterProps) {
           <span>数据来自</span>
           <span className="text-white/60 font-medium">vivo 健康</span>
           <span>·</span>
-          <span className="text-white/60 font-medium">澜轶视奸网</span>
+          <span className="text-white/60 font-medium">皮梦视奸网</span>
         </div>
         
         <span className="hidden sm:inline text-white/20">·</span>

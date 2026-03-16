@@ -1,11 +1,11 @@
 import { memo, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Monitor, Smartphone } from 'lucide-react';
+import { Monitor, Smartphone, MapPin } from 'lucide-react';
 import { useWindowData, formatTimeAgo, isDeviceOnline, getAppDisplayName } from '@/hooks/useWindowData';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const DeviceWindow = memo(function DeviceWindow() {
-  const { data, loading, refresh } = useWindowData();
+  const { data, ipData, loading, refresh } = useWindowData();
 
   const handleClick = useCallback(async () => {
     await refresh();
@@ -55,6 +55,10 @@ const DeviceWindow = memo(function DeviceWindow() {
     app: null,
     access_time: new Date().toISOString(),
   };
+
+  // IP 地理位置数据
+  const pcIpData = ipData?.pc;
+  const mobileIpData = ipData?.mobile;
 
   const devices = [
     {
@@ -152,36 +156,62 @@ const DeviceWindow = memo(function DeviceWindow() {
                 `} />
               </div>
 
-              {/* 电脑端：显示当前应用和窗口标题 */}
+              {/* 电脑端：在线时显示详情，离线时显示已关机 */}
               {device.id === 'pc' && (
                 <>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <p className="text-[10px] text-white/40 uppercase tracking-wider">
-                        设备名称
-                      </p>
-                      <p className="text-sm font-medium text-white/90 mt-0.5 truncate" title={device.data.machine}>
-                        {device.data.machine}
+                  {isOnline ? (
+                    <>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <p className="text-[10px] text-white/40 uppercase tracking-wider">
+                            设备名称
+                          </p>
+                          <p className="text-sm font-medium text-white/90 mt-0.5 truncate" title={device.data.machine}>
+                            {device.data.machine}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-white/40 uppercase tracking-wider">
+                            当前应用
+                          </p>
+                          <p className="text-sm font-medium text-white/90 mt-0.5 truncate" title={appName}>
+                            {appName}
+                          </p>
+                        </div>
+                      </div>
+                      {/* 窗口标题 */}
+                      <div className="mt-3">
+                        <p className="text-[10px] text-white/40 uppercase tracking-wider">
+                          窗口标题
+                        </p>
+                        <p className="text-sm font-medium text-white/90 mt-0.5 truncate" title={device.data.window_title}>
+                          {device.data.window_title}
+                        </p>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex items-center justify-center py-4">
+                      <p className="text-3xl font-medium text-white/80">
+                        已关机
                       </p>
                     </div>
-                    <div>
-                      <p className="text-[10px] text-white/40 uppercase tracking-wider">
-                        当前应用
-                      </p>
-                      <p className="text-sm font-medium text-white/90 mt-0.5 truncate" title={appName}>
-                        {appName}
-                      </p>
+                  )}
+                  {/* 地理位置 */}
+                  {pcIpData && (
+                    <div className="mt-3 pt-3 border-t border-white/10">
+                      <div className="flex items-center gap-2">
+                        <MapPin size={12} className="text-sky-400" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[10px] text-white/40 uppercase tracking-wider">
+                            位置
+                          </p>
+                          <p className="text-sm font-medium text-white/90 mt-0.5 truncate" title={`${pcIpData.location.province}, ${pcIpData.location.city}`}>
+                            {pcIpData.location.province}, {pcIpData.location.city}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  {/* 窗口标题 */}
-                  <div className="mt-3">
-                    <p className="text-[10px] text-white/40 uppercase tracking-wider">
-                      窗口标题
-                    </p>
-                    <p className="text-sm font-medium text-white/90 mt-0.5 truncate" title={device.data.window_title}>
-                      {device.data.window_title}
-                    </p>
-                  </div>
+                  )}
                 </>
               )}
 
@@ -209,13 +239,47 @@ const DeviceWindow = memo(function DeviceWindow() {
                           {device.data.window_title}
                         </p>
                       </div>
+                      {/* 地理位置 */}
+                      {mobileIpData && (
+                        <div className="mt-3 pt-3 border-t border-white/10">
+                          <div className="flex items-center gap-2">
+                            <MapPin size={12} className="text-sky-400" />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-[10px] text-white/40 uppercase tracking-wider">
+                                位置
+                              </p>
+                              <p className="text-sm font-medium text-white/90 mt-0.5 truncate" title={`${mobileIpData.location.province}, ${mobileIpData.location.city}`}>
+                                {mobileIpData.location.province}, {mobileIpData.location.city}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </>
                   ) : (
-                    <div className="flex items-center justify-center py-4">
-                      <p className="text-3xl font-medium text-white/80">
-                        已息屏
-                      </p>
-                    </div>
+                    <>
+                      <div className="flex items-center justify-center py-4">
+                        <p className="text-3xl font-medium text-white/80">
+                          已息屏
+                        </p>
+                      </div>
+                      {/* 地理位置 */}
+                      {mobileIpData && (
+                        <div className="pt-3 border-t border-white/10">
+                          <div className="flex items-center gap-2">
+                            <MapPin size={12} className="text-sky-400" />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-[10px] text-white/40 uppercase tracking-wider">
+                                位置
+                              </p>
+                              <p className="text-sm font-medium text-white/90 mt-0.5 truncate" title={`${mobileIpData.location.province}, ${mobileIpData.location.city}`}>
+                                {mobileIpData.location.province}, {mobileIpData.location.city}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </>
                   )}
                 </>
               )}

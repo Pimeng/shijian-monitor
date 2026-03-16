@@ -8,6 +8,7 @@ export const ENDPOINTS = {
   healthCheck: '/api/health-check',
   window: '/api/window',
   duolingoWildfire: '/api/duolingo/wildfire',
+  ipAddress: '/api/ip_address',
 };
 
 export const REFRESH_INTERVAL = 30000; // 30秒自动刷新

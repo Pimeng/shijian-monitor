@@ -83,6 +83,29 @@ export interface WindowApiResponse {
   data: WindowApiData;
 }
 
+// IP 地理位置类型定义
+export interface IpLocation {
+  province: string;
+  city: string;
+}
+
+export interface IpDeviceData {
+  machine: string;
+  ip_address: string;
+  access_time: string;
+  location: IpLocation;
+}
+
+export interface IpLocationApiData {
+  pc: IpDeviceData;
+  mobile: IpDeviceData;
+}
+
+export interface IpLocationApiResponse {
+  success: boolean;
+  data: IpLocationApiData;
+}
+
 // Duolingo 续火数据类型定义
 export interface DuolingoWildfireData {
   length: number;
