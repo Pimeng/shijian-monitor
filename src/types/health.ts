@@ -93,7 +93,7 @@ export interface IpDeviceData {
   machine: string;
   ip_address: string;
   access_time: string;
-  location: IpLocation;
+  location: IpLocation | null;
 }
 
 export interface IpLocationApiData {

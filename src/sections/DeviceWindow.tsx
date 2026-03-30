@@ -197,7 +197,7 @@ const DeviceWindow = memo(function DeviceWindow() {
                     </div>
                   )}
                   {/* 地理位置 */}
-                  {pcIpData && (
+                  {pcIpData?.location && (
                     <div className="mt-3 pt-3 border-t border-white/10">
                       <div className="flex items-center gap-2">
                         <MapPin size={12} className="text-sky-400" />
@@ -240,7 +240,7 @@ const DeviceWindow = memo(function DeviceWindow() {
                         </p>
                       </div>
                       {/* 地理位置 */}
-                      {mobileIpData && (
+                      {mobileIpData?.location && (
                         <div className="mt-3 pt-3 border-t border-white/10">
                           <div className="flex items-center gap-2">
                             <MapPin size={12} className="text-sky-400" />
@@ -264,7 +264,7 @@ const DeviceWindow = memo(function DeviceWindow() {
                         </p>
                       </div>
                       {/* 地理位置 */}
-                      {mobileIpData && (
+                      {mobileIpData?.location && (
                         <div className="pt-3 border-t border-white/10">
                           <div className="flex items-center gap-2">
                             <MapPin size={12} className="text-sky-400" />
