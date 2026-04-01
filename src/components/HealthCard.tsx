@@ -73,7 +73,7 @@ const HealthCard = memo(function HealthCard({ config, data, index, onClick, deta
         border ${config.color.border}
         cursor-pointer
         transition-shadow duration-200
-        hover:shadow-lg hover:shadow-black/20
+        hover:shadow-lg hover:shadow-black/10 dark:hover:shadow-black/20
         group
       `}
     >
@@ -83,12 +83,12 @@ const HealthCard = memo(function HealthCard({ config, data, index, onClick, deta
           <div className="flex items-center gap-2">
             <div className={`
               w-10 h-10 rounded-xl flex items-center justify-center
-              bg-black/20 backdrop-blur-sm
+              bg-black/10 dark:bg-white/10 backdrop-blur-sm
               ${config.color.icon}
             `}>
               <Icon size={20} strokeWidth={2} />
             </div>
-            <span className="text-xs font-medium text-white/60 uppercase tracking-wider">
+            <span className="text-xs font-medium text-foreground/60 uppercase tracking-wider">
               {config.title}
             </span>
           </div>
@@ -96,14 +96,14 @@ const HealthCard = memo(function HealthCard({ config, data, index, onClick, deta
           <div className="flex items-center gap-2">
             {/* 更新时间戳 */}
             {timestamp && (
-              <div className="flex items-center gap-1 text-xs text-white/40">
+              <div className="flex items-center gap-1 text-xs text-muted-foreground">
                 <Clock size={10} />
                 <span>{updateTime}</span>
               </div>
             )}
             {/* 可查看详情的指示器 */}
             {hasDetail && (
-              <div className="flex items-center text-xs text-white/30 group-hover:text-white/50 transition-colors">
+              <div className="flex items-center text-xs text-muted-foreground/60 group-hover:text-muted-foreground transition-colors">
                 <ChevronRight size={14} />
               </div>
             )}
@@ -117,12 +117,12 @@ const HealthCard = memo(function HealthCard({ config, data, index, onClick, deta
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="text-2xl font-bold text-white"
+            className="text-2xl font-bold text-foreground"
           >
             {typeof value === 'number' ? config.formatter(value) : value}
           </motion.span>
           {config.unit && (
-            <span className="text-sm text-white/50">{config.unit}</span>
+            <span className="text-sm text-muted-foreground">{config.unit}</span>
           )}
         </div>
 
@@ -133,7 +133,7 @@ const HealthCard = memo(function HealthCard({ config, data, index, onClick, deta
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3, delay: 0.1 }}
-            className="mt-2 text-sm text-white/70"
+            className="mt-2 text-sm text-foreground/70"
           >
             {subValue}
           </motion.p>
@@ -144,7 +144,7 @@ const HealthCard = memo(function HealthCard({ config, data, index, onClick, deta
           <div className="mt-4">
             <Progress 
               value={progressValue} 
-              className="h-1.5 bg-black/30"
+              className="h-1.5 bg-black/20 dark:bg-white/20"
             />
           </div>
         )}

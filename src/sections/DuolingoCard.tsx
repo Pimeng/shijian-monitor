@@ -44,12 +44,12 @@ const DuolingoCard = memo(function DuolingoCard() {
         transition={{ duration: 0.5, delay: 0.15, ease: [0.4, 0, 0.2, 1] }}
         className="px-4 sm:px-6 mb-6"
       >
-        <div className="rounded-2xl p-5 border border-white/10 bg-transparent">
+        <div className="rounded-2xl p-5 border border-border bg-card/30">
           <div className="flex items-center gap-4">
-            <Skeleton className="w-16 h-16 rounded-full bg-white/5" />
+            <Skeleton className="w-16 h-16 rounded-full bg-muted" />
             <div className="flex-1">
-              <Skeleton className="h-5 w-32 bg-white/5 mb-2" />
-              <Skeleton className="h-4 w-48 bg-white/5" />
+              <Skeleton className="h-5 w-32 bg-muted mb-2" />
+              <Skeleton className="h-4 w-48 bg-muted" />
             </div>
           </div>
         </div>
@@ -66,7 +66,7 @@ const DuolingoCard = memo(function DuolingoCard() {
         transition={{ duration: 0.5, delay: 0.15, ease: [0.4, 0, 0.2, 1] }}
         className="px-4 sm:px-6 mb-6"
       >
-        <div className="rounded-2xl p-5 border border-white/10 bg-transparent">
+        <div className="rounded-2xl p-5 border border-border bg-card/30">
           <div className="flex items-center gap-4">
             <img
               src={FLAME_EXTINCT_URL}
@@ -74,8 +74,8 @@ const DuolingoCard = memo(function DuolingoCard() {
               className="w-16 h-16 opacity-50"
             />
             <div>
-              <h3 className="text-lg font-semibold text-white/60">多邻国续火</h3>
-              <p className="text-sm text-white/40">暂无数据</p>
+              <h3 className="text-lg font-semibold text-foreground/60">多邻国续火</h3>
+              <p className="text-sm text-muted-foreground">暂无数据</p>
             </div>
           </div>
         </div>
@@ -98,9 +98,9 @@ const DuolingoCard = memo(function DuolingoCard() {
         onClick={handleClick}
         className={`
           rounded-2xl p-5
-          bg-transparent
-          border border-white/10
-          hover:border-white/20
+          bg-card/30
+          border border-border
+          hover:border-border/80
           transition-all duration-300
           cursor-pointer
           group
@@ -145,11 +145,11 @@ const DuolingoCard = memo(function DuolingoCard() {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4, delay: 0.4 }}
-                className="text-3xl font-bold text-white"
+                className="text-3xl font-bold text-foreground"
               >
                 {data.length}
               </motion.span>
-              <span className="text-sm text-white/50">天</span>
+              <span className="text-sm text-muted-foreground">天</span>
               
               {/* 今日状态标签 */}
               <motion.span
@@ -159,8 +159,8 @@ const DuolingoCard = memo(function DuolingoCard() {
                 className={`
                   ml-2 px-2 py-0.5 rounded-full text-xs font-medium
                   ${isToday 
-                    ? 'bg-orange-500/20 text-orange-400 border border-orange-500/30' 
-                    : 'bg-white/10 text-white/50 border border-white/10'
+                    ? 'bg-orange-500/20 text-orange-600 dark:text-orange-400 border border-orange-500/30' 
+                    : 'bg-muted text-muted-foreground border border-border'
                   }
                 `}
               >
@@ -174,7 +174,7 @@ const DuolingoCard = memo(function DuolingoCard() {
               transition={{ duration: 0.4, delay: 0.5 }}
               className="mt-1 space-y-0.5"
             >
-              <p className="text-xs text-white/30">
+              <p className="text-xs text-muted-foreground/70">
                 开始于 {getStartDate(data.startTimestamp)}
                 {' · '}
                 更新于 {formatDate(data.updatedTimestamp)}

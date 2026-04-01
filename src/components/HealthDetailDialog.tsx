@@ -445,10 +445,10 @@ const HealthDetailDialog = memo(function HealthDetailDialog({
     return (
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={chartData} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis 
             dataKey="time" 
-            stroke="rgba(255,255,255,0.4)"
+            stroke="hsl(var(--muted-foreground))"
             fontSize={10}
             tickLine={false}
             axisLine={false}
@@ -456,7 +456,7 @@ const HealthDetailDialog = memo(function HealthDetailDialog({
             minTickGap={30}
           />
           <YAxis 
-            stroke="rgba(255,255,255,0.4)"
+            stroke="hsl(var(--muted-foreground))"
             fontSize={10}
             tickLine={false}
             axisLine={false}
@@ -464,12 +464,12 @@ const HealthDetailDialog = memo(function HealthDetailDialog({
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: 'rgba(26, 26, 46, 0.95)',
-              border: '1px solid rgba(255,255,255,0.1)',
+              backgroundColor: 'hsl(var(--card))',
+              border: '1px solid hsl(var(--border))',
               borderRadius: '8px',
               padding: '8px 12px',
             }}
-            labelStyle={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px' }}
+            labelStyle={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px' }}
             itemStyle={{ color: config.chartColor, fontSize: '14px', fontWeight: 'bold' }}
             formatter={(value: number) => [`${value}${config.unit}`, '']}
             labelFormatter={(label) => `${label}`}
@@ -494,7 +494,7 @@ const HealthDetailDialog = memo(function HealthDetailDialog({
         ref={dialogRef}
         showCloseButton={false}
         className={cn(
-          "bg-black border-white/10 text-white overflow-hidden p-0",
+          "bg-background border-border text-foreground overflow-hidden p-0",
           isDragging && "cursor-grabbing select-none",
           !isMaximized && "resize-handle"
         )}
@@ -515,7 +515,7 @@ const HealthDetailDialog = memo(function HealthDetailDialog({
         {/* 可拖拽的标题栏 */}
         <div 
           className={cn(
-            "flex items-center justify-between px-4 py-3 border-b border-white/10 bg-white/5",
+            "flex items-center justify-between px-4 py-3 border-b border-border bg-muted",
             !isMaximized && "cursor-grab active:cursor-grabbing"
           )}
           onMouseDown={handleDragStart}
@@ -525,7 +525,7 @@ const HealthDetailDialog = memo(function HealthDetailDialog({
               <Icon className={config.color} size={24} />
               {config.title}
             </DialogTitle>
-            <DialogDescription className="text-white/50 sr-only">
+            <DialogDescription className="text-muted-foreground sr-only">
               {data?.description || '查看今日详细数据记录'}
             </DialogDescription>
           </DialogHeader>
@@ -535,7 +535,7 @@ const HealthDetailDialog = memo(function HealthDetailDialog({
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 text-white/60 hover:text-white hover:bg-white/10"
+              className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/80"
               onClick={toggleMaximize}
               title={isMaximized ? "还原" : "最大化"}
             >
@@ -544,7 +544,7 @@ const HealthDetailDialog = memo(function HealthDetailDialog({
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 text-white/60 hover:text-white hover:bg-red-500/80"
+              className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-red-500/80"
               onClick={onClose}
               title="关闭 (ESC)"
             >
@@ -565,18 +565,18 @@ const HealthDetailDialog = memo(function HealthDetailDialog({
           {loading && (
             <div className="space-y-4">
               <div className="grid grid-cols-3 gap-3">
-                <Skeleton className="h-20 bg-white/10" />
-                <Skeleton className="h-20 bg-white/10" />
-                <Skeleton className="h-20 bg-white/10" />
+                <Skeleton className="h-20 bg-muted" />
+                <Skeleton className="h-20 bg-muted" />
+                <Skeleton className="h-20 bg-muted" />
               </div>
-              <Skeleton className="h-48 bg-white/10" />
+              <Skeleton className="h-48 bg-muted" />
             </div>
           )}
 
           {error && (
             <div className="flex flex-col items-center justify-center py-8 text-center">
-              <AlertCircle size={40} className="text-red-400 mb-3" />
-              <p className="text-white/60">{error}</p>
+              <AlertCircle size={40} className="text-red-500 dark:text-red-400 mb-3" />
+              <p className="text-muted-foreground">{error}</p>
             </div>
           )}
 
@@ -585,22 +585,22 @@ const HealthDetailDialog = memo(function HealthDetailDialog({
               {latestItem ? (
                 <>
                   {/* 数据日期 */}
-                  <div className="flex items-center gap-2 text-sm text-white/40 mb-4">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
                     <Clock size={14} />
                     <span>{formatDate(latestItem.t)}</span>
-                    <span className="text-white/20">·</span>
+                    <span className="text-muted-foreground/50">·</span>
                     <span>{formatRelativeTime(latestItem.t)}</span>
                   </div>
 
                   {/* 统计卡片区域 */}
-                  <div className="rounded-2xl border border-white/10 bg-transparent p-4">
+                  <div className="rounded-2xl border border-border bg-card/30 p-4">
                     {renderStats()}
                   </div>
 
                   {/* 折线图区域 */}
                   {chartData.length > 0 && (
-                    <div className="mt-4 rounded-2xl border border-white/10 bg-transparent p-4">
-                      <h4 className="text-sm font-medium text-white/60 mb-3 flex items-center gap-2">
+                    <div className="mt-4 rounded-2xl border border-border bg-card/30 p-4">
+                      <h4 className="text-sm font-medium text-foreground/60 mb-3 flex items-center gap-2">
                         <Activity size={14} />
                         趋势图
                       </h4>
@@ -612,8 +612,8 @@ const HealthDetailDialog = memo(function HealthDetailDialog({
                 </>
               ) : (
                 <div className="flex flex-col items-center justify-center py-8 text-center">
-                  <Activity size={40} className="text-white/20 mb-3" />
-                  <p className="text-white/40">暂无详细数据</p>
+                  <Activity size={40} className="text-muted-foreground/30 mb-3" />
+                  <p className="text-muted-foreground">暂无详细数据</p>
                 </div>
               )}
             </ScrollArea>
@@ -626,8 +626,8 @@ const HealthDetailDialog = memo(function HealthDetailDialog({
             className={cn(
               "absolute bottom-0 right-0 w-5 h-5 cursor-nwse-resize z-50",
               "flex items-end justify-end p-0.5",
-              "hover:bg-white/10 transition-colors rounded-tl-lg",
-              isHoveringResize && "bg-white/10"
+              "hover:bg-muted transition-colors rounded-tl-lg",
+              isHoveringResize && "bg-muted"
             )}
             onMouseDown={handleResize}
             onMouseEnter={() => setIsHoveringResize(true)}
@@ -639,7 +639,7 @@ const HealthDetailDialog = memo(function HealthDetailDialog({
               height="12" 
               viewBox="0 0 12 12" 
               fill="none" 
-              className="text-white/40"
+              className="text-muted-foreground"
             >
               <path d="M11 5V11H5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
               <path d="M11 1V11H1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5"/>
@@ -671,13 +671,13 @@ interface StatCardProps {
 
 function StatCard({ label, value, formatter, unit, icon: Icon, color }: StatCardProps) {
   return (
-    <div className="flex flex-col items-center p-3 rounded-xl bg-white/5">
+    <div className="flex flex-col items-center p-3 rounded-xl bg-muted">
       <Icon className={`${color} mb-1`} size={16} />
       <span className={`text-lg font-bold ${color}`}>
         {formatter(value)}
         {unit && <span className="text-xs ml-0.5">{unit}</span>}
       </span>
-      <span className="text-xs text-white/40">{label}</span>
+      <span className="text-xs text-muted-foreground">{label}</span>
     </div>
   );
 }

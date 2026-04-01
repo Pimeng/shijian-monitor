@@ -152,7 +152,7 @@ const HealthGrid = memo(function HealthGrid({ data, loading, viewMode }: HealthG
             animate={{ opacity: 1 }}
             transition={{ delay: 0 }}
           >
-            <Skeleton className="h-36 rounded-2xl bg-white/5" />
+            <Skeleton className="h-36 rounded-2xl bg-muted" />
           </motion.div>
           {Array.from({ length: 5 }).map((_, i) => (
             <motion.div
@@ -161,7 +161,7 @@ const HealthGrid = memo(function HealthGrid({ data, loading, viewMode }: HealthG
               animate={{ opacity: 1 }}
               transition={{ delay: (i + 1) * 0.05 }}
             >
-              <Skeleton className="h-28 rounded-2xl bg-white/5" />
+              <Skeleton className="h-28 rounded-2xl bg-muted" />
             </motion.div>
           ))}
         </div>
@@ -173,11 +173,11 @@ const HealthGrid = memo(function HealthGrid({ data, loading, viewMode }: HealthG
     return (
       <section className="px-4 sm:px-6">
         <div className="flex flex-col items-center justify-center py-20 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-4">
+          <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mb-4">
             <span className="text-2xl">📊</span>
           </div>
-          <h3 className="text-lg font-medium text-white/80">暂无数据</h3>
-          <p className="text-sm text-white/50 mt-1">请检查网络连接后重试</p>
+          <h3 className="text-lg font-medium text-foreground/80">暂无数据</h3>
+          <p className="text-sm text-muted-foreground mt-1">请检查网络连接后重试</p>
         </div>
       </section>
     );
@@ -425,7 +425,7 @@ const CircularProgress = memo(function CircularProgress({
           fill="none"
           stroke="currentColor"
           strokeWidth={strokeWidth}
-          className="text-white/10"
+          className="text-muted-foreground/20"
         />
         <circle
           cx={size / 2}
@@ -554,15 +554,15 @@ const ScheduleCard = memo(function ScheduleCard({ index, onClick }: { index: num
         initial={{ opacity: 0, y: 20, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.4, delay: index * 0.05 + 0.2 }}
-        className="relative overflow-hidden rounded-2xl p-5 bg-white/[0.03] border border-white/5"
+        className="relative overflow-hidden rounded-2xl p-5 bg-card/50 border border-border"
       >
         <div className="animate-pulse">
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-10 h-10 rounded-xl bg-white/10" />
-            <div className="h-4 w-16 bg-white/10 rounded" />
+            <div className="w-10 h-10 rounded-xl bg-muted" />
+            <div className="h-4 w-16 bg-muted rounded" />
           </div>
-          <div className="h-6 w-32 bg-white/10 rounded mb-2" />
-          <div className="h-4 w-24 bg-white/10 rounded" />
+          <div className="h-6 w-32 bg-muted rounded mb-2" />
+          <div className="h-4 w-24 bg-muted rounded" />
         </div>
       </motion.div>
     );
@@ -576,7 +576,7 @@ const ScheduleCard = memo(function ScheduleCard({ index, onClick }: { index: num
       whileHover={{ y: -4, transition: { duration: 0.2, ease: 'easeOut' } }}
       whileTap={onClick ? { scale: 0.98 } : undefined}
       onClick={onClick}
-      className={`relative overflow-hidden rounded-2xl p-5 bg-white/[0.03] border border-white/5 transition-shadow duration-200 hover:shadow-lg hover:shadow-black/20 group ${onClick ? 'cursor-pointer' : ''}`}
+      className={`relative overflow-hidden rounded-2xl p-5 bg-card/50 border border-border transition-shadow duration-200 hover:shadow-lg hover:shadow-black/10 dark:hover:shadow-black/20 group ${onClick ? 'cursor-pointer' : ''}`}
     >
       {/* 背景色装饰 */}
       {displayCourse && (
@@ -590,12 +590,12 @@ const ScheduleCard = memo(function ScheduleCard({ index, onClick }: { index: num
         {/* 头部：图标和标签 */}
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-black/20 backdrop-blur-sm">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-black/10 dark:bg-white/10 backdrop-blur-sm">
               <Calendar size={20} strokeWidth={2} style={{ color: themeColor }} />
             </div>
             <div className="flex flex-col">
-              <span className="text-xs font-medium text-white/60 uppercase tracking-wider">课程表</span>
-              <span className="text-[10px] text-white/40">第{currentWeek}周 · 周{WEEKDAY_NAMES[currentDay - 1]}</span>
+              <span className="text-xs font-medium text-foreground/60 uppercase tracking-wider">课程表</span>
+              <span className="text-[10px] text-muted-foreground">第{currentWeek}周 · 周{WEEKDAY_NAMES[currentDay - 1]}</span>
             </div>
           </div>
           
@@ -615,13 +615,13 @@ const ScheduleCard = memo(function ScheduleCard({ index, onClick }: { index: num
         {/* 课程内容 */}
         {todayCourses.length === 0 ? (
           <div>
-            <p className="text-xl font-bold text-white/40">今日无课</p>
-            <p className="mt-1 text-sm text-white/30">可以休息一下啦 ~</p>
+            <p className="text-xl font-bold text-foreground/40">今日无课</p>
+            <p className="mt-1 text-sm text-muted-foreground/70">可以休息一下啦 ~</p>
           </div>
         ) : !displayCourse ? (
           <div>
-            <p className="text-xl font-bold text-white/60">今日课程已结束</p>
-            <p className="mt-2 text-sm text-white/40">
+            <p className="text-xl font-bold text-foreground/60">今日课程已结束</p>
+            <p className="mt-2 text-sm text-muted-foreground">
               今天共 {todayCourses.length} 节课
             </p>
           </div>
@@ -634,7 +634,7 @@ const ScheduleCard = memo(function ScheduleCard({ index, onClick }: { index: num
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
-                className="text-xl font-bold text-white truncate flex-1"
+                className="text-xl font-bold text-foreground truncate flex-1"
               >
                 {getCourseName(displayCourse.id)}
               </motion.p>
@@ -662,7 +662,7 @@ const ScheduleCard = memo(function ScheduleCard({ index, onClick }: { index: num
               transition={{ duration: 0.3, delay: 0.1 }}
               className="mt-2 space-y-1"
             >
-              <div className="flex items-center gap-1.5 text-sm text-white/70">
+              <div className="flex items-center gap-1.5 text-sm text-foreground/70">
                 <Clock size={14} style={{ color: themeColor }} />
                 <span>{formatTimeStr(displayCourse.start)} - {formatTimeStr(displayCourse.end)}</span>
                 {!isOngoing && (
@@ -674,14 +674,14 @@ const ScheduleCard = memo(function ScheduleCard({ index, onClick }: { index: num
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   {displayCourse.room && (
-                    <div className="flex items-center gap-1.5 text-sm text-white/60">
+                    <div className="flex items-center gap-1.5 text-sm text-foreground/60">
                       <MapPin size={14} style={{ color: themeColor }} />
                       <span className="truncate">{displayCourse.room}</span>
                     </div>
                   )}
                   {displayCourse.teacher && (
-                    <div className="flex items-center gap-1.5 text-sm text-white/50">
-                      <User size={14} className="text-white/40" />
+                    <div className="flex items-center gap-1.5 text-sm text-foreground/50">
+                      <User size={14} className="text-muted-foreground/60" />
                       <span>{displayCourse.teacher}</span>
                     </div>
                   )}

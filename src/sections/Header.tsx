@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { motion } from 'framer-motion';
 import { RefreshCw, LayoutGrid, List } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 interface HeaderProps {
   onRefresh: () => void;
@@ -26,7 +27,7 @@ const Header = memo(function Header({
       {/* 标题区域 */}
       <div>
         <motion.h1 
-          className="text-2xl sm:text-3xl font-bold text-white tracking-tight"
+          className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
@@ -34,7 +35,7 @@ const Header = memo(function Header({
           Pimeng Alive?
         </motion.h1>
         <motion.p 
-          className="text-sm text-white/50 mt-1"
+          className="text-sm text-muted-foreground mt-1"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
@@ -51,14 +52,14 @@ const Header = memo(function Header({
         transition={{ delay: 0.3 }}
       >
         {/* 视图切换 */}
-        <div className="hidden sm:flex items-center bg-white/5 rounded-lg p-1">
+        <div className="hidden sm:flex items-center bg-muted rounded-lg p-1">
           <Button
             variant="ghost"
             size="icon"
             className={`h-8 w-8 rounded-md transition-all ${
               viewMode === 'grid' 
-                ? 'bg-white/10 text-white' 
-                : 'text-white/50 hover:text-white hover:bg-white/5'
+                ? 'bg-muted-foreground/20 text-foreground' 
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted-foreground/10'
             }`}
             onClick={() => onViewModeChange('grid')}
           >
@@ -69,8 +70,8 @@ const Header = memo(function Header({
             size="icon"
             className={`h-8 w-8 rounded-md transition-all ${
               viewMode === 'list' 
-                ? 'bg-white/10 text-white' 
-                : 'text-white/50 hover:text-white hover:bg-white/5'
+                ? 'bg-muted-foreground/20 text-foreground' 
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted-foreground/10'
             }`}
             onClick={() => onViewModeChange('list')}
           >
@@ -78,11 +79,14 @@ const Header = memo(function Header({
           </Button>
         </div>
 
+        {/* 主题切换 */}
+        <ThemeToggle />
+
         {/* 刷新按钮 */}
         <Button
           variant="ghost"
           size="icon"
-          className="h-10 w-10 rounded-xl bg-white/5 text-white/70 hover:text-white hover:bg-white/10 transition-all"
+          className="h-10 w-10 rounded-xl bg-muted text-foreground/70 hover:text-foreground hover:bg-muted/80 transition-all"
           onClick={onRefresh}
           disabled={isRefreshing}
         >

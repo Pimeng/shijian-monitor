@@ -22,17 +22,17 @@ const DeviceWindow = memo(function DeviceWindow() {
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[0, 1].map((i) => (
-            <div key={i} className="rounded-2xl p-4 border border-white/10">
+            <div key={i} className="rounded-2xl p-4 border border-border bg-card/30">
               <div className="flex items-center gap-3 mb-4">
-                <Skeleton className="w-10 h-10 rounded-xl bg-white/5" />
+                <Skeleton className="w-10 h-10 rounded-xl bg-muted" />
                 <div>
-                  <Skeleton className="h-4 w-24 bg-white/5 mb-1" />
-                  <Skeleton className="h-3 w-12 bg-white/5" />
+                  <Skeleton className="h-4 w-24 bg-muted mb-1" />
+                  <Skeleton className="h-3 w-12 bg-muted" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <Skeleton className="h-10 bg-white/5" />
-                <Skeleton className="h-10 bg-white/5" />
+                <Skeleton className="h-10 bg-muted" />
+                <Skeleton className="h-10 bg-muted" />
               </div>
             </div>
           ))}
@@ -106,9 +106,9 @@ const DeviceWindow = memo(function DeviceWindow() {
               onClick={handleClick}
               className={`
                 rounded-2xl p-4
-                bg-transparent
-                border border-white/10
-                hover:border-white/20
+                bg-card/30
+                border border-border
+                hover:border-border/80
                 transition-all duration-300
                 cursor-pointer
                 group
@@ -120,25 +120,25 @@ const DeviceWindow = memo(function DeviceWindow() {
                   <div className={`
                     w-10 h-10 rounded-xl flex items-center justify-center
                     ${isOnline 
-                      ? 'bg-emerald-500/20 text-emerald-400' 
-                      : 'bg-white/10 text-white/50'
+                      ? 'bg-emerald-500/20 text-emerald-500 dark:text-emerald-400' 
+                      : 'bg-muted text-muted-foreground'
                     }
                     transition-colors duration-300
                   `}>
                     <Icon size={20} strokeWidth={2} />
                   </div>
                   <div>
-                    <h3 className="text-sm font-semibold text-white">
+                    <h3 className="text-sm font-semibold text-foreground">
                       {device.name}
                     </h3>
                     <div className="flex items-center gap-1.5 mt-0.5">
                       {isOnline ? (
                         <>
-                          <span className="text-xs text-emerald-400">在线</span>
+                          <span className="text-xs text-emerald-500 dark:text-emerald-400">在线</span>
                         </>
                       ) : (
                         <>
-                          <span className="text-xs text-white/40">离线</span>
+                          <span className="text-xs text-muted-foreground">离线</span>
                         </>
                       )}
                     </div>
@@ -149,8 +149,8 @@ const DeviceWindow = memo(function DeviceWindow() {
                 <div className={`
                   w-2 h-2 rounded-full
                   ${isOnline 
-                    ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]' 
-                    : 'bg-white/20'
+                    ? 'bg-emerald-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] dark:bg-emerald-400 dark:shadow-[0_0_8px_rgba(52,211,153,0.6)]' 
+                    : 'bg-muted-foreground/30'
                   }
                   animate-pulse
                 `} />
@@ -163,49 +163,49 @@ const DeviceWindow = memo(function DeviceWindow() {
                     <>
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <p className="text-[10px] text-white/40 uppercase tracking-wider">
+                          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                             设备名称
                           </p>
-                          <p className="text-sm font-medium text-white/90 mt-0.5 truncate" title={device.data.machine}>
+                          <p className="text-sm font-medium text-foreground/90 mt-0.5 truncate" title={device.data.machine}>
                             {device.data.machine}
                           </p>
                         </div>
                         <div>
-                          <p className="text-[10px] text-white/40 uppercase tracking-wider">
+                          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                             当前应用
                           </p>
-                          <p className="text-sm font-medium text-white/90 mt-0.5 truncate" title={appName}>
+                          <p className="text-sm font-medium text-foreground/90 mt-0.5 truncate" title={appName}>
                             {appName}
                           </p>
                         </div>
                       </div>
                       {/* 窗口标题 */}
                       <div className="mt-3">
-                        <p className="text-[10px] text-white/40 uppercase tracking-wider">
+                        <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                           窗口标题
                         </p>
-                        <p className="text-sm font-medium text-white/90 mt-0.5 truncate" title={device.data.window_title}>
+                        <p className="text-sm font-medium text-foreground/90 mt-0.5 truncate" title={device.data.window_title}>
                           {device.data.window_title}
                         </p>
                       </div>
                     </>
                   ) : (
                     <div className="flex items-center justify-center py-4">
-                      <p className="text-3xl font-medium text-white/80">
+                      <p className="text-3xl font-medium text-foreground/80">
                         已关机
                       </p>
                     </div>
                   )}
                   {/* 地理位置 */}
                   {pcIpData?.location && (
-                    <div className="mt-3 pt-3 border-t border-white/10">
+                    <div className="mt-3 pt-3 border-t border-border">
                       <div className="flex items-center gap-2">
-                        <MapPin size={12} className="text-sky-400" />
+                        <MapPin size={12} className="text-sky-500 dark:text-sky-400" />
                         <div className="flex-1 min-w-0">
-                          <p className="text-[10px] text-white/40 uppercase tracking-wider">
+                          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                             位置
                           </p>
-                          <p className="text-sm font-medium text-white/90 mt-0.5 truncate" title={`${pcIpData.location.province}, ${pcIpData.location.city}`}>
+                          <p className="text-sm font-medium text-foreground/90 mt-0.5 truncate" title={`${pcIpData.location.province}, ${pcIpData.location.city}`}>
                             {pcIpData.location.province}, {pcIpData.location.city}
                           </p>
                         </div>
@@ -222,33 +222,33 @@ const DeviceWindow = memo(function DeviceWindow() {
                     <>
                       <div className="grid grid-cols-1 gap-3">
                         <div>
-                          <p className="text-[10px] text-white/40 uppercase tracking-wider">
+                          <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                             设备名称
                           </p>
-                          <p className="text-sm font-medium text-white/90 mt-0.5 truncate" title={device.data.machine}>
+                          <p className="text-sm font-medium text-foreground/90 mt-0.5 truncate" title={device.data.machine}>
                             {device.data.machine}
                           </p>
                         </div>
                       </div>
                       {/* 窗口标题 */}
                       <div className="mt-3">
-                        <p className="text-[10px] text-white/40 uppercase tracking-wider">
+                        <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                           窗口标题
                         </p>
-                        <p className="text-sm font-medium text-white/90 mt-0.5 truncate" title={device.data.window_title}>
+                        <p className="text-sm font-medium text-foreground/90 mt-0.5 truncate" title={device.data.window_title}>
                           {device.data.window_title}
                         </p>
                       </div>
                       {/* 地理位置 */}
                       {mobileIpData?.location && (
-                        <div className="mt-3 pt-3 border-t border-white/10">
+                        <div className="mt-3 pt-3 border-t border-border">
                           <div className="flex items-center gap-2">
-                            <MapPin size={12} className="text-sky-400" />
+                            <MapPin size={12} className="text-sky-500 dark:text-sky-400" />
                             <div className="flex-1 min-w-0">
-                              <p className="text-[10px] text-white/40 uppercase tracking-wider">
+                              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                                 位置
                               </p>
-                              <p className="text-sm font-medium text-white/90 mt-0.5 truncate" title={`${mobileIpData.location.province}, ${mobileIpData.location.city}`}>
+                              <p className="text-sm font-medium text-foreground/90 mt-0.5 truncate" title={`${mobileIpData.location.province}, ${mobileIpData.location.city}`}>
                                 {mobileIpData.location.province}, {mobileIpData.location.city}
                               </p>
                             </div>
@@ -259,20 +259,20 @@ const DeviceWindow = memo(function DeviceWindow() {
                   ) : (
                     <>
                       <div className="flex items-center justify-center py-4">
-                        <p className="text-3xl font-medium text-white/80">
+                        <p className="text-3xl font-medium text-foreground/80">
                           已息屏
                         </p>
                       </div>
                       {/* 地理位置 */}
                       {mobileIpData?.location && (
-                        <div className="pt-3 border-t border-white/10">
+                        <div className="pt-3 border-t border-border">
                           <div className="flex items-center gap-2">
-                            <MapPin size={12} className="text-sky-400" />
+                            <MapPin size={12} className="text-sky-500 dark:text-sky-400" />
                             <div className="flex-1 min-w-0">
-                              <p className="text-[10px] text-white/40 uppercase tracking-wider">
+                              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                                 位置
                               </p>
-                              <p className="text-sm font-medium text-white/90 mt-0.5 truncate" title={`${mobileIpData.location.province}, ${mobileIpData.location.city}`}>
+                              <p className="text-sm font-medium text-foreground/90 mt-0.5 truncate" title={`${mobileIpData.location.province}, ${mobileIpData.location.city}`}>
                                 {mobileIpData.location.province}, {mobileIpData.location.city}
                               </p>
                             </div>
@@ -286,7 +286,7 @@ const DeviceWindow = memo(function DeviceWindow() {
 
               {/* 最后活跃时间 */}
               <div className="mt-3">
-                <p className="text-xs text-white/40">
+                <p className="text-xs text-muted-foreground">
                   最后活跃: {lastSeen}
                 </p>
               </div>

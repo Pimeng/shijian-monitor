@@ -171,14 +171,14 @@ const ActivityRings = memo(function ActivityRings({ data, onStatClick }: Activit
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="relative rounded-2xl p-5 bg-transparent border border-white/10 hover:border-white/20 transition-all duration-300"
+      className="relative rounded-2xl p-5 bg-card/30 border border-border hover:border-border/80 transition-all duration-300"
     >
       <div className="flex items-center gap-6">
         {/* 左侧数据 */}
         <div className="flex-1">
           {/* 更新时间戳 */}
           {timestamp && (
-            <div className="flex items-center gap-1 text-xs text-white/40 mb-3">
+            <div className="flex items-center gap-1 text-xs text-muted-foreground mb-3">
               <Clock size={10} />
               <span>{updateTime}</span>
             </div>
@@ -195,23 +195,23 @@ const ActivityRings = memo(function ActivityRings({ data, onStatClick }: Activit
                 e.stopPropagation();
                 handleStatClick(stat.detailType);
               }}
-              className={`group/stat ${stat.detailType ? 'cursor-pointer hover:bg-white/5 -m-2 p-2 rounded-lg transition-colors' : ''}`}
+              className={`group/stat ${stat.detailType ? 'cursor-pointer hover:bg-muted -m-2 p-2 rounded-lg transition-colors' : ''}`}
             >
               <div className="flex items-center gap-1.5 mb-1">
                 <div 
                   className="w-1 h-3 rounded-full"
                   style={{ backgroundColor: stat.color }}
                 />
-                <span className="text-xs text-white/60">{stat.label}</span>
+                <span className="text-xs text-foreground/60">{stat.label}</span>
                 {stat.detailType && (
-                  <ChevronRight size={12} className="text-white/20 opacity-0 group-hover/stat:opacity-100 transition-opacity" />
+                  <ChevronRight size={12} className="text-muted-foreground/30 opacity-0 group-hover/stat:opacity-100 transition-opacity" />
                 )}
               </div>
               <div className="flex items-baseline gap-1">
-                <span className="text-xl font-semibold text-white">
+                <span className="text-xl font-semibold text-foreground">
                   {stat.value}
                 </span>
-                <span className="text-xs text-white/40">
+                <span className="text-xs text-muted-foreground">
                   / {stat.displayMax} {stat.unit}
                 </span>
               </div>
