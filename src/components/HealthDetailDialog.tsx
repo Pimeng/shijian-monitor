@@ -317,6 +317,30 @@ const HealthDetailDialog = memo(function HealthDetailDialog({
 
   const chartData = getChartData();
 
+  const renderCustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ value?: number | string }>; label?: string }) => {
+    if (!active || !payload?.length) return null;
+
+    const rawValue = payload[0]?.value;
+    const numericValue = typeof rawValue === 'number' ? rawValue : Number(rawValue);
+    const formattedValue = Number.isFinite(numericValue)
+      ? `${config.formatter(numericValue)}${config.unit}`
+      : `${rawValue ?? ''}${config.unit}`;
+
+    return (
+      <div
+        className="m-0 rounded-lg border border-border bg-card px-3 py-2"
+      >
+        <p className="m-0 text-xs text-muted-foreground">{label}</p>
+        <p
+          className="m-0 text-sm font-bold"
+          style={{ color: config.chartColor }}
+        >
+          {formattedValue}
+        </p>
+      </div>
+    );
+  };
+
   // 渲染统计卡片
   const renderStats = () => {
     if (!latestItem) return null;
@@ -463,16 +487,7 @@ const HealthDetailDialog = memo(function HealthDetailDialog({
             domain={['dataMin - 5', 'dataMax + 5']}
           />
           <Tooltip
-            contentStyle={{
-              backgroundColor: 'hsl(var(--card))',
-              border: '1px solid hsl(var(--border))',
-              borderRadius: '8px',
-              padding: '8px 12px',
-            }}
-            labelStyle={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px' }}
-            itemStyle={{ color: config.chartColor, fontSize: '14px', fontWeight: 'bold' }}
-            formatter={(value: number) => [`${value}${config.unit}`, '']}
-            labelFormatter={(label) => `${label}`}
+            content={renderCustomTooltip}
           />
           <Line
             type="monotone"
